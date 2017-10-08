@@ -11,7 +11,7 @@ set -e
 
 show_help() {
   cat << EOT
-usage: freebsd-bootstrap.sh [--vbox][--zfs]|[--help]
+usage: freebsd-bootstrap.sh [--gnome][--xfce][--vbox]|[--help]
 
 --gnome
   Install Gnome 3
@@ -98,6 +98,7 @@ pkg install -y \
   emacs25 \
   git \
   htop \
+  ImageMagick7-nox11 \
   linux-c7 \
   memcached \
   node \
@@ -111,11 +112,8 @@ pkg install -y \
   tmux \
   xorg \
 
-# Setup PostgreSQL
-/usr/local/etc/rc.d/postgresql initdb
-createuser -s `logname`
-
-# Install minimum linux compatibility, remove linux-c7 from above
+# Install minimum linux compatibility for Sublime Text
+# Swap for linux-c7 from above
 # pkg install -y \
 #   linux_base-c7 \
 #   linux-c7-xorg-libs \
@@ -128,6 +126,10 @@ curl -O https://download.sublimetext.com/files/sublime-text-3143-1.x86_64.rpm
 cd /compat/linux/
 rpm2cpio < /tmp/sublime-text-3143-1.x86_64.rpm | cpio -id
 cd $currdir
+
+# Setup PostgreSQL
+/usr/local/etc/rc.d/postgresql initdb
+createuser -s `logname`
 
 # Configuration files
 
