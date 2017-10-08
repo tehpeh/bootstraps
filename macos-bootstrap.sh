@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Symlink dotfiles
 # TODO: path below should use path of this file?

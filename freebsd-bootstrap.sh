@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 # References
 #
@@ -91,13 +92,13 @@ pw usermod "$CURRENT_USER" -G video
 pkg update
 pkg upgrade -y
 
-pgk install -y \
-  ack \
+pkg install -y \
   cuse4bsd-kmod \
   elasticsearch5 \
   emacs25 \
   git \
   htop \
+  linux-c7 \
   memcached \
   node \
   postgresql96-server postgresql96-client postgresql96-contrib \
@@ -109,6 +110,24 @@ pgk install -y \
   sudo \
   tmux \
   xorg \
+
+# Setup PostgreSQL
+/usr/local/etc/rc.d/postgresql initdb
+createuser -s `logname`
+
+# Install minimum linux compatibility, remove linux-c7 from above
+# pkg install -y \
+#   linux_base-c7 \
+#   linux-c7-xorg-libs \
+#   linux-c7-cairo linux-c7-gdk-pixbuf2 linux-c7-glx-utils linux-c7-gtk2
+
+# Install Sublime Text 3
+currdir=`pwd`
+cd /tmp
+curl -O https://download.sublimetext.com/files/sublime-text-3143-1.x86_64.rpm
+cd /compat/linux/
+rpm2cpio < /tmp/sublime-text-3143-1.x86_64.rpm | cpio -id
+cd $currdir
 
 # Configuration files
 
@@ -179,6 +198,13 @@ devfs_system_ruleset="devfsrules_common"
 avahi_daemon_enable="YES"
 dbus_enable="YES"
 hald_enable="YES"
+
+# Start databases
+postgresql_enable="NO"
+elasticsearch_enable="NO"
+redis_enable="NO"
+rabbitmq_enable="NO"
+memcached_enable="NO"
 ' /etc/rc.conf
 
 # /etc/sysctl.conf
@@ -321,35 +347,6 @@ slim_enable="YES"
 
   write_to_file 'exec $1' "/home/$CURRENT_USER/.xinitrc"
 fi
-
-# Programming tools
-pkg install -y \
-
-
-/usr/local/etc/rc.d/postgresql initdb
-createuser -s `logname`
-
-write_to_file '
-# Start databases
-postgresql_enable="NO"
-elasticsearch_enable="NO"
-redis_enable="NO"
-rabbitmq_enable="NO"
-memcached_enable="NO"
-' /etc/rc.conf
-
-# Add Sublime Text 3
-pkg install -y \
-  linux_base-c7 \
-  linux-c7-xorg-libs \
-  linux-c7-cairo linux-c7-gdk-pixbuf2 linux-c7-glx-utils linux-c7-gtk2
-
-currdir=`pwd`
-cd /tmp
-curl -O https://download.sublimetext.com/files/sublime-text-3143-1.x86_64.rpm
-cd /compat/linux/
-rpm2cpio < /tmp/sublime-text-3143-1.x86_64.rpm | cpio -id
-cd $currdir
 
 # Final message
 cat <<EOT
