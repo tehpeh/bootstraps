@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-# Download: curl -LO http://bit.ly/freebsd-bootstrap
+# Download: curl -LO https://bit.ly/freebsd-bootstrap
 
 # References
 #
@@ -81,14 +81,17 @@ fi
 # System
 freebsd-update fetch install
 # TODO: exit only if updates were installed
+# output:
+# The following files will be updated as part of updating...
+# Installing updates... done.
 printf "exiting, remove me to run full script"
 exit
 
 CURRENT_USER=`logname`
 
-pw usermod "$CURRENT_USER" -G wheel
-pw usermod "$CURRENT_USER" -G operator
-pw usermod "$CURRENT_USER" -G video
+pw usermod "$CURRENT_USER" -G wheel,operator,video
+
+kldload linux64
 
 # Packages
 pkg update
@@ -105,7 +108,7 @@ pkg install -y \
   memcached \
   node \
   postgresql96-server postgresql96-client postgresql96-contrib \
-  qt5-webkit qt5-qmake qt5-buildtools
+  qt5-webkit qt5-qmake qt5-buildtools \
   rabbitmq \
   rbenv \
   redis \
@@ -130,8 +133,10 @@ rpm2cpio < /tmp/sublime-text-3143-1.x86_64.rpm | cpio -id
 cd $currdir
 
 # Setup PostgreSQL
-/usr/local/etc/rc.d/postgresql initdb
-createuser -s `logname`
+/usr/local/etc/rc.d/postgresql oneinitdb
+service postgresql onestart
+sudo -u postgres createuser -s `logname`
+sudo -u postgres createdb `logname`
 
 # Configuration files
 
@@ -313,7 +318,7 @@ add path 'uvisor[0-9]*' mode 0660
 
 # Optional packages and configuration
 
-if [[ "$VBOX" = true ]]; then
+if [ "$VBOX" = true ]; then
   pgk install -y virtualbox-ose-additions
 
   write_to_file '
@@ -323,18 +328,18 @@ vboxservice_enable="YES"
 ' /etc/rc.conf
 fi
 
-if [[ "$GNOME" = true ]]; then
+if [ "$GNOME" = true ]; then
   pgk install -y gnome3
 fi
 
-if [[ "$GNOME" = true && "$XFCE" = false ]]; then
+if [ "$GNOME" = true && "$XFCE" = false ]; then
   write_to_file '
 # Enable Gnome login manager
 gdm_enable="YES"
 ' /etc/rc.conf
 fi
 
-if [[ "$XFCE" = true ]]; then
+if [ "$XFCE" = true ]; then
   pgk install -y \
     xfce \
     xfce4-mixer \

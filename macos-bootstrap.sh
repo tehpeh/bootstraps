@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Download: curl -LO http://bit.ly/macos-bootstrap
+# Download: curl -LO https://bit.ly/macos-bootstrap
 
 # Symlink dotfiles
 # TODO: path below should use path of this file?
