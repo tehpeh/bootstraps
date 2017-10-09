@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+# Download: curl -LO http://bit.ly/freebsd-bootstrap
+
 # References
 #
 # https://cooltrainer.org/a-freebsd-desktop-howto/

@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+# Download: curl -LO http://bit.ly/macos-bootstrap
+
 # Symlink dotfiles
 # TODO: path below should use path of this file?
 # TODO: remove . from source files and prefix to target file
