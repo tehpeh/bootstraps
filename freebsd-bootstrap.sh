@@ -81,7 +81,7 @@ fi
 # System update
 sysupdate=`freebsd-update fetch`
 case "$sysupdate" in
-  *"Installing updates"*)
+  *"The following files will be updated"*)
     printf "$sysupdate"
     freebsd-update install
     printf "\nUpdates were installed, please reboot then re-run this script"
