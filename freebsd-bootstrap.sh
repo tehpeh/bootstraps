@@ -78,17 +78,15 @@ if [ `whoami` != 'root' ]; then
   su
 fi
 
-# System update
-sysupdate=`freebsd-update fetch`
-case "$sysupdate" in
-  *"The following files will be updated"*)
-    printf "$sysupdate"
-    freebsd-update install
-    printf "\nUpdates were installed, please reboot then re-run this script"
+# Interactive system update
+read -p "Do you want to check for and install system updates? If yes this script will exit [n]" answer
+case $answer in
+  [Yy]*)
+    freebsd-update fetch install
+    printf "\nPlease reboot if updates were installed then re-run this script"
     exit
     ;;
 esac
-printf "$sysupdate"
 
 CURRENT_USER=`logname`
 
