@@ -78,14 +78,15 @@ if [ `whoami` != 'root' ]; then
   su
 fi
 
-# System
-freebsd-update fetch install
-# TODO: exit only if updates were installed
-# output:
-# The following files will be updated as part of updating...
-# Installing updates... done.
-printf "exiting, remove me to run full script"
-exit
+# System update
+sysupdate=`freebsd-update fetch install`
+if echo "$sysupdate" | grep "Installing updates"; then
+  printf "$sysupdate"
+  printf "\nUpdates were installed, please reboot then re-run this script"
+  exit
+else
+  printf "$sysupdate"
+fi
 
 CURRENT_USER=`logname`
 
