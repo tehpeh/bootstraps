@@ -83,7 +83,7 @@ read -p "Do you want to check for and install system updates? If y this script w
 case $answer in
   [Yy]*)
     freebsd-update fetch install
-    printf "\nPlease reboot if updates were installed then re-run this script\n"
+    printf "\nPlease reboot then re-run this script to continue...\n"
     exit
     ;;
 esac
