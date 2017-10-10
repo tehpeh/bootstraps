@@ -79,7 +79,7 @@ if [ `whoami` != 'root' ]; then
 fi
 
 # Interactive system update
-read -p "Do you want to check for and install system updates? If y this script will exit [y|n]" answer
+read -p "Do you want to check for and install system updates? If y this script will exit [y/n] " answer
 case $answer in
   [Yy]*)
     freebsd-update fetch install
