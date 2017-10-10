@@ -79,10 +79,11 @@ if [ `whoami` != 'root' ]; then
 fi
 
 # System update
-sysupdate=`freebsd-update fetch install`
+sysupdate=`freebsd-update fetch`
 case "$sysupdate" in
-  *Installing updates*)
+  *"Installing updates"*)
     printf "$sysupdate"
+    freebsd-update install
     printf "\nUpdates were installed, please reboot then re-run this script"
     exit
     ;;
