@@ -80,13 +80,14 @@ fi
 
 # System update
 sysupdate=`freebsd-update fetch install`
-if echo "$sysupdate" | grep "Installing updates"; then
-  printf "$sysupdate"
-  printf "\nUpdates were installed, please reboot then re-run this script"
-  exit
-else
-  printf "$sysupdate"
-fi
+case "$sysupdate" in
+  *Installing updates*)
+    printf "$sysupdate"
+    printf "\nUpdates were installed, please reboot then re-run this script"
+    exit
+    ;;
+esac
+printf "$sysupdate"
 
 CURRENT_USER=`logname`
 
