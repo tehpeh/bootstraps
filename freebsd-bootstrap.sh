@@ -320,7 +320,7 @@ add path 'uvisor[0-9]*' mode 0660
 # Optional packages and configuration
 
 if [ "$VBOX" = true ]; then
-  pgk install -y virtualbox-ose-additions
+  pkg install -y virtualbox-ose-additions
 
   write_to_file '
 # Enable VirtualBox Guest Additions
@@ -330,7 +330,7 @@ vboxservice_enable="YES"
 fi
 
 if [ "$GNOME" = true ]; then
-  pgk install -y gnome3
+  pkg install -y gnome3
 fi
 
 if [ "$GNOME" = true && "$XFCE" = false ]; then
@@ -341,7 +341,7 @@ gdm_enable="YES"
 fi
 
 if [ "$XFCE" = true ]; then
-  pgk install -y \
+  pkg install -y \
     xfce \
     xfce4-mixer \
     xfce4-power-manager \
