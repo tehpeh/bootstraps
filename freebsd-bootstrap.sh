@@ -188,7 +188,7 @@ cuse4bsd_load="YES"
 # /etc/rc.conf
 # use sudo service <name> onestatus to check what is already running
 write_to_file '
-# Disable mouse
+# Enable mouse
 moused_enable="NO"
 
 # Enable BlueTooth
@@ -256,6 +256,8 @@ hw.snd.default_unit=0
 write_to_file '
 proc\t/proc\tprocfs\trw\t0\t0
 fdesc\t/dev/fd\tfdescfs\trw,auto,late\t0\t0
+linprocfs\t/compat/linux/proc\tlinprocfs\trw\t0\t0
+tmpfs\t/compat/linux/dev/shm\ttmpfs\trw,mode=1777\t0\t0
 ' /etc/fstab
 
 # /etc/devfs.conf
