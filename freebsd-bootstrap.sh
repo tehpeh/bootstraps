@@ -74,8 +74,8 @@ while :; do
 done
 
 if [ `whoami` != 'root' ]; then
-  echo "Escalating privileges"
-  su
+  printf "Please run as root"
+  exit
 fi
 
 # Interactive system update
