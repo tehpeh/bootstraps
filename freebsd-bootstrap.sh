@@ -136,6 +136,10 @@ cd /tmp
 curl -O https://download.sublimetext.com/files/sublime-text-3143-1.x86_64.rpm
 cd /compat/linux/
 rpm2cpio < /tmp/sublime-text-3143-1.x86_64.rpm | cpio -id
+ln -s /compat/linux/opt/sublime_text/sublime_text /usr/local/bin/subl
+cp /compat/linux/usr/share/applications/sublime_text.desktop /usr/local/share/applications/
+# change Exec=subl %F and StartupNotify=false
+cp /compat/linux/opt/sublime_text/Icon/128x128/sublime-text.png /usr/local/share/icons/
 cd $currdir
 
 # Setup PostgreSQL
@@ -314,6 +318,8 @@ add path 'cx23885*' mode 0660 # CX23885-family stream configuration device
 add path 'iicdev*' mode 0660
 add path 'uvisor[0-9]*' mode 0660
 " /etc/devfs.rules
+
+# set locales to UTF-8-US
 
 # /etc/hosts
 # TBD add domain to hostname?
