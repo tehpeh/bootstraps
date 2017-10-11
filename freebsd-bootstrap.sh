@@ -113,6 +113,7 @@ pkg install -y \
   rabbitmq \
   rbenv \
   redis \
+  rpm4 \
   ruby-build \
   sudo \
   tmux \
@@ -124,6 +125,10 @@ pkg install -y \
 #   linux_base-c7 \
 #   linux-c7-xorg-libs \
 #   linux-c7-cairo linux-c7-gdk-pixbuf2 linux-c7-glx-utils linux-c7-gtk2
+
+# Initialize rpm database
+mkdir -p /var/lib/rpm
+/usr/local/bin/rpm --initdb
 
 # Install Sublime Text 3
 currdir=`pwd`
@@ -249,8 +254,8 @@ hw.snd.default_unit=0
 
 # /etc/fstab
 write_to_file '
-proc  /proc   procfs  rw  0 0
-fdesc /dev/fd fdescfs rw,auto,late  0 0
+proc\t/proc\tprocfs\trw\t0\t0
+fdesc\t/dev/fd\tfdescfs\trw,auto,late\t0\t0
 ' /etc/fstab
 
 # /etc/devfs.conf
