@@ -95,6 +95,9 @@ printf "\naddress=/.localhost/127.0.0.1" >> /usr/local/etc/dnsmasq.conf
 sudo mkdir -p /etc/resolver
 sudo printf "nameserver 127.0.0.1" > /etc/resolver/localhost
 
+# Fixes issue with nginx not working properly under root
+chmod o+x /usr/local/var
+
 # Link Sublime command line
 ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
 
