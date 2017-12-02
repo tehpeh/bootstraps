@@ -90,10 +90,10 @@ brew install \
   postgres \
   redis \
 
-# Setup dnsmasq for .dev
-printf "\naddress=/dev/127.0.0.1" >> /usr/local/etc/dnsmasq.conf
+# Setup dnsmasq for .localhost domains
+printf "\naddress=/.localhost/127.0.0.1" >> /usr/local/etc/dnsmasq.conf
 sudo mkdir -p /etc/resolver
-sudo printf "nameserver 127.0.0.1" > /etc/resolver/dev
+sudo printf "nameserver 127.0.0.1" > /etc/resolver/localhost
 
 # Link Sublime command line
 ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
