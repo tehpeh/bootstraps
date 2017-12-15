@@ -95,6 +95,9 @@ pw usermod "$CURRENT_USER" -G wheel,operator,video
 kldload linux64
 
 # Packages
+# TODO: switch to 'latest' repository,
+#cp /etc/pkg/FreeBSD.conf /usr/local/etc/pkg/repos/FreeBSD.conf
+# replace "pkg+http://pkg.FreeBSD.org/${ABI}/latest”
 pkg update
 pkg upgrade -y
 
@@ -262,6 +265,7 @@ proc\t/proc\tprocfs\trw\t0\t0
 fdesc\t/dev/fd\tfdescfs\trw,auto,late\t0\t0
 linprocfs\t/compat/linux/proc\tlinprocfs\trw\t0\t0
 tmpfs\t/compat/linux/dev/shm\ttmpfs\trw,mode=1777\t0\t0
+linsysfs\t/compat/linux/sys\tlinsysfs\trw\t0\t0
 ' /etc/fstab
 
 # /etc/devfs.conf
