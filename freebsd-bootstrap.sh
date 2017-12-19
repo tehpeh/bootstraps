@@ -480,7 +480,6 @@ EOT
 # webcamd_enable="YES"
 
 
-
 #### TrueOS Install Defaults July 2017 ####
 
 ################## /boot/loader.conf ##################
@@ -530,3 +529,81 @@ EOT
 # hald_enable="YES"
 # vboxguest_enable="YES"
 # vboxservice_enable="YES"
+
+
+#### GhostBSD 11.1 defaults ####
+
+################## /boot/loader.conf ##################
+
+# loader_brand="gbsd"
+# loader_logo="gbsd"
+# hw.psm.synaptics_support="1"
+# # boot_mute="YES"
+# crypto_load="YES"
+# aesni_load="YES"
+# geom_eli_load="YES"
+# zfs_load="YES"
+
+################## /etc/sysctl.conf ##################
+
+# # $FreeBSD: releng/11.1/etc/sysctl.conf 112200 2003-03-13 18:43:50Z mux $
+# #
+# #  This file is read when going to multi-user and its contents piped thru
+# #  ``sysctl'' to adjust kernel values.  ``man 5 sysctl.conf'' for details.
+# #
+
+# # Uncomment this to prevent users from seeing information about processes that
+# # are being run under another UID.
+# #security.bsd.see_other_uids=0
+# vfs.usermount=1
+
+# # the following is required to run chromium browser
+# kern.ipc.shm_allow_removed=1
+
+# # make sure the system find the kernel path.
+# kern.bootfile=/boot/kernel/kernel
+
+# # this is required for MBR 4 alignement
+# kern.geom.part.mbr.enforce_chs=0
+
+# vm.defer_swapspace_pageouts=1
+
+################## /etc/rc.conf ##################
+
+# # Power saver.
+# powerd_enable="YES"
+# powerd_flags="-a adp -b adp"
+
+# # DEVFS rules
+# devfs_system_ruleset="devfsrules_common"
+# devd_enable="YES"
+
+# # usbd_enable="YES"
+# dbus_enable="YES"
+# hald_enable="YES"
+# polkit_enable="YES"
+
+# moused_enable="YES"
+# # iscsid_enable="YES"
+
+# # Enable linux compatibility
+# linux_enable="YES"
+
+# # Load the following kernel modules
+# kld_list="geom_mirror geom_journal geom_eli linux fuse ext2fs cuse"
+
+# # Configs from installed packages
+# webcamd_enable="YES"
+# vboxguest_enable="YES"
+# vboxservice_enable="YES"
+# cupsd_enable="YES"
+# lpd_enable="NO"
+
+# slim_enable="YES"
+# ntpd_enable="YES"
+# ntpd_sync_on_start="YES"
+# keymap="us.iso"
+# hostname="xfce.ghostbsd-pc.home"
+# slim_enable="YES"
+# zfs_enable="YES"
+# ifconfig_em0="DHCP"
