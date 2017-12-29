@@ -120,6 +120,8 @@ pkg install -y \
   ruby-build \
   sudo \
   tmux \
+  x11-fonts/urwfonts-ttf \
+  x11-fonts/webfonts \
   xorg \
 
 # Install minimum linux compatibility for Sublime Text
@@ -141,8 +143,10 @@ cd /compat/linux/
 rpm2cpio < /tmp/sublime-text-3143-1.x86_64.rpm | cpio -id
 ln -s /compat/linux/opt/sublime_text/sublime_text /usr/local/bin/subl
 cp /compat/linux/usr/share/applications/sublime_text.desktop /usr/local/share/applications/
-# change Exec=subl %F and StartupNotify=false
+# change to Exec=/compat/linux/opt/sublime_text/sublime_text %F and StartupNotify=false
+# remove OnlyShowIn=Unity
 cp /compat/linux/opt/sublime_text/Icon/128x128/sublime-text.png /usr/local/share/icons/
+# possibly above isn't required? icons copied automatically?
 cd $currdir
 
 # Setup PostgreSQL
@@ -151,11 +155,17 @@ service postgresql onestart
 sudo -u postgres createuser -s `logname`
 sudo -u postgres createdb `logname`
 
+# Disable bitmap fonts (Eg. for github.com)
+ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
+
 # Configuration files
 
 # /boot/loader.conf
 # use kldstat -v | grep <name> to check what is already loaded
 write_to_file '
+# Reduce boot menu delay
+autoboot_delay="3"
+
 # Boot-time kernel tuning
 kern.ipc.shmseg=1024
 kern.ipc.shmmni=1024
