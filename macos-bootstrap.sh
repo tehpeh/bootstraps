@@ -43,6 +43,7 @@ brew cask install \
   glimmerblocker \
   google-chrome \
   google-cloud-sdk \
+  hyperswitch \
   omnidisksweeper \
   rowanj-gitx \
   sizeup \
