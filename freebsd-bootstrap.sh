@@ -108,6 +108,7 @@ pkg install -y \
   git \
   htop \
   ImageMagick7-nox11 \
+  libinotify \
   linux-c7 \
   memcached \
   node \
@@ -135,6 +136,7 @@ pkg install -y \
 mkdir -p /var/lib/rpm
 /usr/local/bin/rpm --initdb
 
+# TODO: test if ST3 can use libinotify
 # Install Sublime Text 3
 currdir=`pwd`
 cd /tmp
