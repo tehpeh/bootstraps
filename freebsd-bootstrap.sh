@@ -92,27 +92,30 @@ CURRENT_USER=`logname`
 
 pw usermod "$CURRENT_USER" -G wheel,operator,video
 
-kldload linux64
+kldload linux64  # TODO: needs check for already loaded
 
 # Packages
 # TODO: switch to 'latest' repository,
-#cp /etc/pkg/FreeBSD.conf /usr/local/etc/pkg/repos/FreeBSD.conf
+# mkdir -p /usr/local/etc/pkg/repos
+# cp /etc/pkg/FreeBSD.conf /usr/local/etc/pkg/repos/FreeBSD.conf
 # replace "pkg+http://pkg.FreeBSD.org/${ABI}/latest”
 pkg update
 pkg upgrade -y
 
 pkg install -y \
   cuse4bsd-kmod \
-  elasticsearch5 \
-  emacs25 \
+  elasticsearch6 \
+  emacs \
   git \
+  gtk-arc-themes \
   htop \
   ImageMagick7-nox11 \
   libinotify \
   linux-c7 \
   memcached \
+  neovim \
   node \
-  postgresql96-server postgresql96-client postgresql96-contrib \
+  postgresql10-server postgresql10-client postgresql10-contrib \
   qt5-webkit qt5-qmake qt5-buildtools \
   rabbitmq \
   rbenv \
