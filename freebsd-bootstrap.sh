@@ -83,12 +83,12 @@ while :; do
 done
 
 # Check for root
-if [ `whoami` != 'root' ]; then
+if [ $(whoami) != 'root' ]; then
   printf "Please run as root"
   exit
 fi
 
-CURRENT_USER=`logname`
+CURRENT_USER=$(logname)
 
 # Interactive system update
 read -p "Do you want to check for and install system updates? [y/N]: " answer
@@ -101,15 +101,14 @@ case $answer in
 esac
 
 # Load linux if not already
-LINUX_LOADED=`kldstat -v | grep linux64`
-if [ ! LINUX_LOADED  ]; then
+if [ ! "$(kldstat -v | grep linux64)" ]; then
   kldload linux64
 fi
 
 # Packages
 
 # Switch to 'latest' pkg repository
-if [ `grep quarterly /etc/pkg/FreeBSD.conf` ]; then
+if [ "$(grep quarterly /etc/pkg/FreeBSD.conf)" ]; then
   mkdir -p /usr/local/etc/pkg/repos
   cp /etc/pkg/FreeBSD.conf /usr/local/etc/pkg/repos/FreeBSD.conf
   sed -i '' -e 's/quarterly/latest/g' /usr/local/etc/pkg/repos/FreeBSD.conf
@@ -189,7 +188,7 @@ mkdir -p /var/lib/rpm
 
 # TODO: test if ST3 can use libinotify
 # Install Sublime Text 3
-currdir=`pwd`
+currdir=$(pwd)
 cd /tmp
 curl -O https://download.sublimetext.com/files/sublime-text-3170-1.x86_64.rpm
 cd /compat/linux/
@@ -203,7 +202,7 @@ cp /compat/linux/usr/share/applications/sublime_text.desktop /usr/local/share/ap
 cd $currdir
 
 # Install ruby-install
-currdir=`pwd`
+currdir=$(pwd)
 cd /tmp
 git clone https://github.com/steakknife/ruby-install-freebsd
 cd ruby-install-freebsd
