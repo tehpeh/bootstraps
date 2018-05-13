@@ -8,12 +8,13 @@ set -e
 # https://cooltrainer.org/a-freebsd-desktop-howto/
 # https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/x11-wm.html
 # TrueOS Desktop install July 2017
+# GhostBSD 11.1
 
 # Util functions
 
 show_help() {
   cat << EOT
-usage: freebsd-bootstrap.sh [--gnome][--xfce][--vbox]|[--help]
+usage: freebsd-bootstrap.sh [--gnome][--xfce][--vbox][--vmware]|[--help]
 
 --gnome
   Install Gnome 3
@@ -23,6 +24,9 @@ usage: freebsd-bootstrap.sh [--gnome][--xfce][--vbox]|[--help]
 
 --vbox
   Include VirtualBox additions and config
+
+--vmware
+  Include VMWare additions and config
 
 --help
   This help
@@ -40,6 +44,7 @@ VERSION="0.1"
 GNOME=false
 XFCE=false
 VBOX=false
+VMWARE=false
 
 while :; do
   case $1 in
@@ -59,6 +64,10 @@ while :; do
         echo "Using VirtualBox configuration"
         VBOX=true
         ;;
+    --vmware)
+        echo "Using VMWare configuration"
+        VMWARE=true
+        ;;
     --) # End of all options.
         shift
         break
@@ -73,6 +82,7 @@ while :; do
   shift
 done
 
+# Check for root
 if [ `whoami` != 'root' ]; then
   printf "Please run as root"
   exit
@@ -90,50 +100,87 @@ esac
 
 CURRENT_USER=`logname`
 
+# Add admin and video acceleration groups to user
 pw usermod "$CURRENT_USER" -G wheel,operator,video
 
-kldload linux64  # TODO: needs check for already loaded
+# Load linux if not already
+if [ ! `kldstat -v | grep linux64` ]; then
+  kldload linux64
+fi
 
 # Packages
-# TODO: switch to 'latest' repository,
-# mkdir -p /usr/local/etc/pkg/repos
-# cp /etc/pkg/FreeBSD.conf /usr/local/etc/pkg/repos/FreeBSD.conf
-# replace "pkg+http://pkg.FreeBSD.org/${ABI}/latest”
+
+# Switch to 'latest' pkg repository
+if [ `grep quarterly /etc/pkg/FreeBSD.conf` ]; then
+  mkdir -p /usr/local/etc/pkg/repos
+  cp /etc/pkg/FreeBSD.conf /usr/local/etc/pkg/repos/FreeBSD.conf
+  sed -i '' -e 's/quarterly/latest/g' /usr/local/etc/pkg/repos/FreeBSD.conf
+fi
+
 pkg update
 pkg upgrade -y
 
+# Install utilities
+
 pkg install -y \
+  curl \
   cuse4bsd-kmod \
-  elasticsearch6 \
-  emacs \
+  direnv \
+  fusefs-encfs \
   git \
-  gtk-arc-themes \
+  gnupg \
   htop \
-  ImageMagick7-nox11 \
   libinotify \
   linux-c7 \
-  memcached \
-  neovim \
-  node \
-  postgresql10-server postgresql10-client postgresql10-contrib \
-  qt5-webkit qt5-qmake qt5-buildtools \
-  rabbitmq \
-  rbenv \
-  redis \
+  pefs-kmod \
   rpm4 \
-  ruby-build \
   sudo \
-  tmux \
-  x11-fonts/urwfonts-ttf \
-  x11-fonts/webfonts \
-  xorg \
+  tmux
 
-# Install minimum linux compatibility for Sublime Text
-# Swap for linux-c7 from above
+# Alternatively, install minimum linux compatibility for Sublime Text
+# Swap for linux-c7 from above for:
 # pkg install -y \
 #   linux_base-c7 \
 #   linux-c7-xorg-libs \
 #   linux-c7-cairo linux-c7-gdk-pixbuf2 linux-c7-glx-utils linux-c7-gtk2
+
+# Install applications
+
+pkg install -y \
+  chromium \
+  emacs \
+  firefox \
+  gtk-arc-themes \
+  neovim \
+  vim \
+  x11-fonts/urwfonts-ttf \
+  x11-fonts/webfonts \
+  x11-fonts/anonymous-pro \
+  x11-fonts/dejavu \
+  x11-fonts/terminus-font \
+  x11-fonts/droid-fonts-ttf \
+  xorg
+
+# Install programming tools
+
+pkg install -y \
+  go \
+  ImageMagick7-nox11 \
+  node \
+  qt5-webkit qt5-qmake qt5-buildtools \
+  rbenv \
+  ruby-build
+
+# Install services
+
+pkg install -y \
+  dnsmasq \
+  elasticsearch6 \
+  memcached \
+  nginx  \
+  postgresql10-server postgresql10-client postgresql10-contrib \
+  rabbitmq \
+  redis
 
 # Initialize rpm database
 mkdir -p /var/lib/rpm
@@ -143,27 +190,38 @@ mkdir -p /var/lib/rpm
 # Install Sublime Text 3
 currdir=`pwd`
 cd /tmp
-curl -O https://download.sublimetext.com/files/sublime-text-3143-1.x86_64.rpm
+curl -O https://download.sublimetext.com/files/sublime-text-3170-1.x86_64.rpm
 cd /compat/linux/
 rpm2cpio < /tmp/sublime-text-3143-1.x86_64.rpm | cpio -id
 ln -s /compat/linux/opt/sublime_text/sublime_text /usr/local/bin/subl
 cp /compat/linux/usr/share/applications/sublime_text.desktop /usr/local/share/applications/
 # change to Exec=/compat/linux/opt/sublime_text/sublime_text %F and StartupNotify=false
 # remove OnlyShowIn=Unity
-cp /compat/linux/opt/sublime_text/Icon/128x128/sublime-text.png /usr/local/share/icons/
+# cp /compat/linux/opt/sublime_text/Icon/128x128/sublime-text.png /usr/local/share/icons/
 # possibly above isn't required? icons copied automatically?
+cd $currdir
+
+# Install ruby-install
+currdir=`pwd`
+cd /tmp
+git clone https://github.com/steakknife/ruby-install-freebsd
+cd ruby-install-freebsd
+./install
+rm -rf /tmp/ruby-install-freebsd
+cd /usr/ports/lang/ruby-install
+make install clean
 cd $currdir
 
 # Setup PostgreSQL
 /usr/local/etc/rc.d/postgresql oneinitdb
 service postgresql onestart
-sudo -u postgres createuser -s `logname`
-sudo -u postgres createdb `logname`
+sudo -u postgres createuser -s "$CURRENT_USER"
+sudo -u postgres createdb "$CURRENT_USER"
 
 # Disable bitmap fonts (Eg. for github.com)
 ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
 
-# Configuration files
+# Write default configuration files
 
 # /boot/loader.conf
 # use kldstat -v | grep <name> to check what is already loaded
@@ -180,16 +238,16 @@ kern.maxproc=100000
 vfs.zfs.arc_max="256M"
 
 # Enable Wellspring touchpad driver (for Apple Internal Trackpad)
-wsp_load="YES"
+wsp_load="NO"
 
 # Filesystems in Userspace
 fuse_load="YES"
 
 # Intel Core thermal sensors
-# coretemp_load="YES"
+coretemp_load="NO"
 
 # AMD K8, K10, K11 thermal sensors
-# amdtemp_load="YES"
+amdtemp_load="NO"
 
 # In-memory filesystems
 tmpfs_load="YES"
@@ -211,7 +269,7 @@ cuse4bsd_load="YES"
 # use sudo service <name> onestatus to check what is already running
 write_to_file '
 # Enable mouse
-moused_enable="NO"
+moused_enable="YES"
 
 # Enable BlueTooth
 hcsecd_enable="YES"
@@ -231,7 +289,7 @@ linux_enable="YES"
 # Enable our custom device ruleset
 devfs_system_ruleset="devfsrules_common"
 
-# Enable services for Gnome etc
+# Enable services for Gnome type desktops
 avahi_daemon_enable="YES"
 dbus_enable="YES"
 hald_enable="YES"
@@ -338,13 +396,15 @@ add path 'iicdev*' mode 0660
 add path 'uvisor[0-9]*' mode 0660
 " /etc/devfs.rules
 
-# set locales to UTF-8-US
+# set locale to UTF-8-US
+write_to_file '
+me:\
+        :charset=UTF-8:\
+        :lang=en_US.UTF-8:
+' "/home/$CURRENT_USER/.login_conf"
 
 # /etc/hosts
 # TBD add domain to hostname?
-
-# /etc/login.conf
-# TBD
 
 # firewall
 # TBD
@@ -359,6 +419,32 @@ if [ "$VBOX" = true ]; then
 vboxguest_enable="YES"
 vboxservice_enable="YES"
 ' /etc/rc.conf
+
+sysrc moused_enable="NO"
+fi
+
+if [ "$VMWARE" = true ]; then
+  pkg install -y xf86-input-vmmouse xf86-video-vmware open-vm-tools
+
+  write_to_file '
+# Enable VMWare Guest Additions
+vmware_guestd_enable="YES"
+' /etc/rc.conf
+
+mkdir -p /usr/local/etc/X11/xorg.conf.d
+
+  write_to_file '
+Section "ServerFlags"
+       Option             "AutoAddDevices"       "false"
+EndSection
+Section "InputDevice"
+       Identifier "Mouse0"
+       Driver             "vmmouse"
+       Option              "Device"       "/dev/sysmouse"
+EndSection
+' /usr/local/etc/X11/xorg.conf.d/10-vmmouse.conf
+
+sysrc moused_enable="YES"
 fi
 
 if [ "$GNOME" = true ]; then
