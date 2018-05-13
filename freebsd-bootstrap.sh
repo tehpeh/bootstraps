@@ -88,6 +88,8 @@ if [ `whoami` != 'root' ]; then
   exit
 fi
 
+CURRENT_USER=`logname`
+
 # Interactive system update
 read -p "Do you want to check for and install system updates? [y/N]: " answer
 case $answer in
@@ -98,13 +100,9 @@ case $answer in
     ;;
 esac
 
-CURRENT_USER=`logname`
-
-# Add admin and video acceleration groups to user
-pw usermod "$CURRENT_USER" -G wheel,operator,video
-
 # Load linux if not already
-if [ ! `kldstat -v | grep linux64` ]; then
+LINUX_LOADED=`kldstat -v | grep linux64`
+if [ ! LINUX_LOADED  ]; then
   kldload linux64
 fi
 
@@ -181,6 +179,9 @@ pkg install -y \
   postgresql10-server postgresql10-client postgresql10-contrib \
   rabbitmq \
   redis
+
+# Add admin and video acceleration groups to user
+pw usermod "$CURRENT_USER" -G wheel,operator,video
 
 # Initialize rpm database
 mkdir -p /var/lib/rpm
