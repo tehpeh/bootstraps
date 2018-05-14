@@ -117,7 +117,7 @@ fi
 pkg update
 pkg upgrade -y
 
-# Install utilities
+# Install packages
 
 pkg install -y \
   curl \
@@ -132,18 +132,8 @@ pkg install -y \
   pefs-kmod \
   rpm4 \
   sudo \
-  tmux
-
-# Alternatively, install minimum linux compatibility for Sublime Text
-# Swap for linux-c7 from above for:
-# pkg install -y \
-#   linux_base-c7 \
-#   linux-c7-xorg-libs \
-#   linux-c7-cairo linux-c7-gdk-pixbuf2 linux-c7-glx-utils linux-c7-gtk2
-
-# Install applications
-
-pkg install -y \
+  tmux \
+  \
   chromium \
   emacs \
   firefox \
@@ -156,21 +146,15 @@ pkg install -y \
   x11-fonts/dejavu \
   x11-fonts/terminus-font \
   x11-fonts/droid-fonts-ttf \
-  xorg
-
-# Install programming tools
-
-pkg install -y \
+  xorg \
+  \
   go \
-  ImageMagick7-nox11 \
+  ImageMagick7 \
   node \
   qt5-webkit qt5-qmake qt5-buildtools \
   rbenv \
-  ruby-build
-
-# Install services
-
-pkg install -y \
+  ruby-build \
+  \
   dnsmasq \
   elasticsearch6 \
   memcached \
@@ -178,6 +162,13 @@ pkg install -y \
   postgresql10-server postgresql10-client postgresql10-contrib \
   rabbitmq \
   redis
+
+# Alternatively, install minimum linux compatibility for Sublime Text
+# Swap for linux-c7 from above for:
+# pkg install -y \
+#   linux_base-c7 \
+#   linux-c7-xorg-libs \
+#   linux-c7-cairo linux-c7-gdk-pixbuf2 linux-c7-glx-utils linux-c7-gtk2
 
 # Add admin and video acceleration groups to user
 pw usermod "$CURRENT_USER" -G wheel,operator,video
@@ -192,7 +183,7 @@ currdir=$(pwd)
 cd /tmp
 curl -O https://download.sublimetext.com/files/sublime-text-3170-1.x86_64.rpm
 cd /compat/linux/
-rpm2cpio < /tmp/sublime-text-3143-1.x86_64.rpm | cpio -id
+rpm2cpio < /tmp/sublime-text-3170-1.x86_64.rpm | cpio -id
 ln -s /compat/linux/opt/sublime_text/sublime_text /usr/local/bin/subl
 cp /compat/linux/usr/share/applications/sublime_text.desktop /usr/local/share/applications/
 # change to Exec=/compat/linux/opt/sublime_text/sublime_text %F and StartupNotify=false
