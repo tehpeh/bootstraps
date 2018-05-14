@@ -389,8 +389,8 @@ add path 'uvisor[0-9]*' mode 0660
 
 # set locale to UTF-8-US
 write_to_file '
-me:\
-        :charset=UTF-8:\
+me:\\
+        :charset=UTF-8:\\
         :lang=en_US.UTF-8:
 ' "/home/$CURRENT_USER/.login_conf"
 
