@@ -123,7 +123,6 @@ pkg install -y \
   curl \
   cuse4bsd-kmod \
   direnv \
-  doas \
   fusefs-encfs \
   git \
   gnupg \
@@ -133,6 +132,7 @@ pkg install -y \
   pefs-kmod \
   rpm4 \
   tmux \
+  sudo \
   \
   chromium \
   emacs \
@@ -465,6 +465,7 @@ slim_enable="YES"
 ' /etc/rc.conf
 
   write_to_file 'exec $1' "/home/$CURRENT_USER/.xinitrc"
+  chown "$CURRENT_USER:$CURRENT_USER" .xinitrc
 fi
 
 # Final message
