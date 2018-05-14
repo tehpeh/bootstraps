@@ -123,6 +123,7 @@ pkg install -y \
   curl \
   cuse4bsd-kmod \
   direnv \
+  doas \
   fusefs-encfs \
   git \
   gnupg \
@@ -131,7 +132,6 @@ pkg install -y \
   linux-c7 \
   pefs-kmod \
   rpm4 \
-  sudo \
   tmux \
   \
   chromium \
