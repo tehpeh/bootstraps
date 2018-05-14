@@ -149,7 +149,7 @@ pkg install -y \
   xorg \
   \
   go \
-  ImageMagick7 \
+  ImageMagick \
   node \
   qt5-webkit qt5-qmake qt5-buildtools \
   rbenv \
