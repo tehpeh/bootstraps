@@ -129,7 +129,9 @@ pkg install -y \
   htop \
   libinotify \
   linux-c7 \
+  openssl \
   pefs-kmod \
+  readline \
   rpm4 \
   tmux \
   sudo \
@@ -147,19 +149,23 @@ pkg install -y \
   x11-fonts/terminus-font \
   x11-fonts/droid-fonts-ttf \
   xorg \
+  xpdf \
   \
   go \
   ImageMagick \
   node \
+  python3 \
   qt5-webkit qt5-qmake qt5-buildtools \
   rbenv \
   ruby-build \
+  yarn \
   \
   dnsmasq \
   elasticsearch6 \
   memcached \
   nginx  \
-  postgresql10-server postgresql10-client postgresql10-contrib \
+  postgis24 \
+  postgresql95-server postgresql95-client postgresql95-contrib \
   rabbitmq \
   redis
 
@@ -206,8 +212,8 @@ cd $currdir
 # Setup PostgreSQL
 /usr/local/etc/rc.d/postgresql oneinitdb
 service postgresql onestart
-sudo -u postgres createuser -s "$CURRENT_USER"
-sudo -u postgres createdb "$CURRENT_USER"
+sudo -u pgsql createuser -s "$CURRENT_USER"
+sudo -u pgsql createdb "$CURRENT_USER"
 
 # Disable bitmap fonts (Eg. for github.com)
 ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
@@ -456,6 +462,7 @@ if [ "$XFCE" = true ]; then
     xfce4-power-manager \
     xfce4-netload-plugin \
     xfce4-systemload-plugin \
+    xfce4-whiskermenu-plugin \
     slim \
     slim-themes
 
@@ -464,8 +471,9 @@ if [ "$XFCE" = true ]; then
 slim_enable="YES"
 ' /etc/rc.conf
 
-  write_to_file 'exec $1' "/home/$CURRENT_USER/.xinitrc"
-  chown "$CURRENT_USER:$CURRENT_USER" .xinitrc
+  # write_to_file 'exec $1' "/home/$CURRENT_USER/.xinitrc"
+  # chown "$CURRENT_USER:$CURRENT_USER" .xinitrc
+  cp /usr/local/etc/xdg/xfce4/xinitrc .xinitrc
 fi
 
 # Final message
