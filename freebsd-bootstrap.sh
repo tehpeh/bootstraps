@@ -214,7 +214,7 @@ cd $currdir
 # Setup PostgreSQL
 /usr/local/etc/rc.d/postgresql oneinitdb
 service postgresql onestart
-sudo -u pgsql createuser -s "$CURRENT_USER"
+sudo -u pgsql createuser -s "$CURRENT_USER" # use user postgres for pg10
 sudo -u pgsql createdb "$CURRENT_USER"
 
 # Disable bitmap fonts (Eg. for github.com)
