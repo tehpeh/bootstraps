@@ -148,6 +148,8 @@ pkg install -y \
   x11-fonts/dejavu \
   x11-fonts/terminus-font \
   x11-fonts/droid-fonts-ttf \
+  x11-fonts/google-fonts \
+  x11-fonts/meslo \
   xorg \
   xpdf \
   \
