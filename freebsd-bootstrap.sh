@@ -142,14 +142,15 @@ pkg install -y \
   gtk-arc-themes \
   neovim \
   vim \
-  x11-fonts/urwfonts-ttf \
-  x11-fonts/webfonts \
   x11-fonts/anonymous-pro \
   x11-fonts/dejavu \
-  x11-fonts/terminus-font \
   x11-fonts/droid-fonts-ttf \
   x11-fonts/google-fonts \
   x11-fonts/meslo \
+  x11-fonts/roboto-fonts-ttf \
+  x11-fonts/terminus-font \
+  x11-fonts/urwfonts-ttf \
+  x11-fonts/webfonts \
   xorg \
   xpdf \
   \
@@ -197,7 +198,7 @@ cp /compat/linux/usr/share/applications/sublime_text.desktop /usr/local/share/ap
 # change to Exec=/compat/linux/opt/sublime_text/sublime_text %F and StartupNotify=false
 # remove OnlyShowIn=Unity
 # cp /compat/linux/opt/sublime_text/Icon/128x128/sublime-text.png /usr/local/share/icons/
-# possibly above isn't required? icons copied automatically?
+# possibly above isn't required? icons copied automatically? - No
 cd $currdir
 
 # Install ruby-install
