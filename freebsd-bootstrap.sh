@@ -156,21 +156,27 @@ pkg install -y \
   \
   go \
   ImageMagick \
-  node \
+  node8 \
   python3 \
   qt5-webkit qt5-qmake qt5-buildtools \
   rbenv \
   ruby-build \
-  yarn \
   \
   dnsmasq \
-  elasticsearch6 \
-  memcached \
   nginx  \
-  postgis24 \
-  postgresql95-server postgresql95-client postgresql95-contrib \
-  rabbitmq \
+  postgresql10-server postgresql10-client postgresql10-contrib \
   redis
+
+# Extra dev services
+#  rabbitmq \
+#  elasticsearch6 \
+#  memcached \
+
+# Install ports
+# yarn - make config - select node8 - make install clean
+# postgis24 - make install clean (USES=pgsql by default installed version)
+
+# OR use jails for app specific dependencies, and install latest globally
 
 # Alternatively, install minimum linux compatibility for Sublime Text
 # Swap for linux-c7 from above for:
@@ -201,22 +207,22 @@ cp /compat/linux/usr/share/applications/sublime_text.desktop /usr/local/share/ap
 # possibly above isn't required? icons copied automatically? - No
 cd $currdir
 
-# Install ruby-install
-currdir=$(pwd)
-cd /tmp
-git clone https://github.com/steakknife/ruby-install-freebsd
-cd ruby-install-freebsd
-./install
-rm -rf /tmp/ruby-install-freebsd
-cd /usr/ports/lang/ruby-install
-make install clean
-cd $currdir
+# Install ruby-install - issues with readline, ruby-build works better
+# currdir=$(pwd)
+# cd /tmp
+# git clone https://github.com/steakknife/ruby-install-freebsd
+# cd ruby-install-freebsd
+# ./install
+# rm -rf /tmp/ruby-install-freebsd
+# cd /usr/ports/lang/ruby-install
+# make install clean
+# cd $currdir
 
 # Setup PostgreSQL
 /usr/local/etc/rc.d/postgresql oneinitdb
 service postgresql onestart
-sudo -u pgsql createuser -s "$CURRENT_USER" # use user postgres for pg10
-sudo -u pgsql createdb "$CURRENT_USER"
+sudo -u postgres createuser -s "$CURRENT_USER" # use user pgsql for pg95
+sudo -u postgres createdb "$CURRENT_USER"
 
 # Disable bitmap fonts (Eg. for github.com)
 ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
