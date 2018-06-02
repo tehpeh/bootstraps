@@ -123,6 +123,7 @@ pkg install -y \
   curl \
   cuse4bsd-kmod \
   direnv \
+  fish \
   fusefs-encfs \
   git \
   gnupg \
