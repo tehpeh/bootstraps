@@ -302,11 +302,8 @@ dbus_enable="YES"
 hald_enable="YES"
 
 # Start databases
-postgresql_enable="NO"
-elasticsearch_enable="NO"
-redis_enable="NO"
-rabbitmq_enable="NO"
-memcached_enable="NO"
+postgresql_enable="YES"
+redis_enable="YES"
 ' /etc/rc.conf
 
 # /etc/sysctl.conf
@@ -481,9 +478,8 @@ if [ "$XFCE" = true ]; then
 slim_enable="YES"
 ' /etc/rc.conf
 
-  # write_to_file 'exec $1' "/home/$CURRENT_USER/.xinitrc"
-  # chown "$CURRENT_USER:$CURRENT_USER" .xinitrc
   cp /usr/local/etc/xdg/xfce4/xinitrc .xinitrc
+  chown "$CURRENT_USER:$CURRENT_USER" .xinitrc
 fi
 
 # Final message
