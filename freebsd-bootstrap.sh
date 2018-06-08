@@ -140,17 +140,21 @@ pkg install -y \
   chromium \
   emacs \
   firefox \
+  font-manager \
+  geary \
+  gnome-keyring \
   gtk-arc-themes \
   neovim \
+  seahorse \
   vim \
   x11-fonts/anonymous-pro \
   x11-fonts/dejavu \
   x11-fonts/droid-fonts-ttf \
   x11-fonts/google-fonts \
+  x11-fonts/liberation-fonts-ttf \
   x11-fonts/meslo \
   x11-fonts/roboto-fonts-ttf \
   x11-fonts/terminus-font \
-  x11-fonts/urwfonts-ttf \
   x11-fonts/webfonts \
   xorg \
   xpdf \
@@ -179,6 +183,12 @@ pkg install -y \
 
 # OR use jails for app specific dependencies, and install latest globally
 
+# Set up fonts
+# Download and install SF fonts from Apple
+# If you install `x11-fonts/urwfonts-ttf` then disable all Nimbus fonts in font-manager
+# because Nimbus, as replacement for Helvetica, renders really compressed kerning in Firefox
+ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d
+
 # Alternatively, install minimum linux compatibility for Sublime Text
 # Swap for linux-c7 from above for:
 # pkg install -y \
@@ -197,9 +207,9 @@ mkdir -p /var/lib/rpm
 # Install Sublime Text 3
 currdir=$(pwd)
 cd /tmp
-curl -O https://download.sublimetext.com/files/sublime-text-3170-1.x86_64.rpm
+curl -O https://download.sublimetext.com/files/sublime-text-3176-1.x86_64.rpm
 cd /compat/linux/
-rpm2cpio < /tmp/sublime-text-3170-1.x86_64.rpm | cpio -id
+rpm2cpio < /tmp/sublime-text-3176-1.x86_64.rpm | cpio -id
 ln -s /compat/linux/opt/sublime_text/sublime_text /usr/local/bin/subl
 cp /compat/linux/usr/share/applications/sublime_text.desktop /usr/local/share/applications/
 # change to Exec=/compat/linux/opt/sublime_text/sublime_text %F and StartupNotify=false
@@ -469,6 +479,7 @@ if [ "$XFCE" = true ]; then
     xfce4-power-manager \
     xfce4-netload-plugin \
     xfce4-systemload-plugin \
+    xfce4-weather-plugin \
     xfce4-whiskermenu-plugin \
     slim \
     slim-themes
@@ -480,6 +491,9 @@ slim_enable="YES"
 
   cp /usr/local/etc/xdg/xfce4/xinitrc .xinitrc
   chown "$CURRENT_USER:$CURRENT_USER" .xinitrc
+
+  # set slim theme to fbsd
+  # Adjust mousewheel.default.delta_multiplier_y to 175 in Firefox, about:config
 fi
 
 # Final message
