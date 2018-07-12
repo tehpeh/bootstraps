@@ -187,7 +187,8 @@ pkg install -y \
 # Download and install SF fonts from Apple
 # If you install `x11-fonts/urwfonts-ttf` then disable all Nimbus fonts in font-manager
 # because Nimbus, as replacement for Helvetica, renders really compressed kerning in Firefox
-ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d
+# Disable bitmap fonts (Eg. for github.com)
+ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
 
 # Alternatively, install minimum linux compatibility for Sublime Text
 # Swap for linux-c7 from above for:
@@ -235,9 +236,6 @@ service postgresql onestart
 sudo -u postgres createuser -s "$CURRENT_USER" # use user pgsql for pg95
 sudo -u postgres createdb "$CURRENT_USER"
 
-# Disable bitmap fonts (Eg. for github.com)
-ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
-
 # Write default configuration files
 
 # /boot/loader.conf
@@ -251,8 +249,14 @@ kern.ipc.shmseg=1024
 kern.ipc.shmmni=1024
 kern.maxproc=100000
 
+# Use newer vt console (is default now?)
+kern.vty=vt
+
 # Tune ZFS Arc Size - Change to adjust memory used for disk cache
 vfs.zfs.arc_max="256M"
+
+# Enable Android and Raspberry Pi tethering
+if_urndis_load="YES"
 
 # Enable Wellspring touchpad driver (for Apple Internal Trackpad)
 wsp_load="NO"
@@ -285,6 +289,15 @@ cuse4bsd_load="YES"
 # /etc/rc.conf
 # use sudo service <name> onestatus to check what is already running
 write_to_file '
+# Caps lock as control
+keymap="us.ctrl.kbd"
+
+# Use DHCP for tethered Raspberry Pi
+ifconfig_ue0="DHCP"
+
+# Do not wait for DHCP during boot
+background_dhclient="YES"
+
 # Enable mouse
 moused_enable="YES"
 
