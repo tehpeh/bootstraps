@@ -9,6 +9,19 @@ set -e
 # https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/x11-wm.html
 # TrueOS Desktop install July 2017
 # GhostBSD 11.1
+# https://www.c0ffee.net/blog/freebsd-on-a-laptop/
+
+# TODO
+#
+# - xorg config, if any?
+# key remap using xmod...
+# add ssl stuff to /etc/make.conf
+# use switch for latest repo
+# modify .xinitrc for locale
+# use fbsd theme in slim
+# check conf files on mac mini for additions
+# /usr/local/etc/rc.d/rslsync and download binary
+# try openmdns or mdnsresponder instead of avahi which didn't resolve .local for me
 
 # Util functions
 
@@ -108,11 +121,12 @@ fi
 # Packages
 
 # Switch to 'latest' pkg repository
-if [ "$(grep quarterly /etc/pkg/FreeBSD.conf)" ]; then
-  mkdir -p /usr/local/etc/pkg/repos
-  cp /etc/pkg/FreeBSD.conf /usr/local/etc/pkg/repos/FreeBSD.conf
-  sed -i '' -e 's/quarterly/latest/g' /usr/local/etc/pkg/repos/FreeBSD.conf
-fi
+# TODO: make this an option
+# if [ "$(grep quarterly /etc/pkg/FreeBSD.conf)" ]; then
+#   mkdir -p /usr/local/etc/pkg/repos
+#   cp /etc/pkg/FreeBSD.conf /usr/local/etc/pkg/repos/FreeBSD.conf
+#   sed -i '' -e 's/quarterly/latest/g' /usr/local/etc/pkg/repos/FreeBSD.conf
+# fi
 
 pkg update
 pkg upgrade -y
@@ -128,9 +142,11 @@ pkg install -y \
   git \
   gnupg \
   htop \
+  keybase \
   libinotify \
-  linux-c7 \
+  linux-c6 \
   openssl \
+  password-store \
   pefs-kmod \
   readline \
   rpm4 \
@@ -144,20 +160,25 @@ pkg install -y \
   geary \
   gnome-keyring \
   gtk-arc-themes \
+  linux-sublime3 \
   neovim \
   seahorse \
+  sndio \
   vim \
   x11-fonts/anonymous-pro \
   x11-fonts/dejavu \
   x11-fonts/droid-fonts-ttf \
+  x11-fonts/emojione-color-font-ttf \
   x11-fonts/google-fonts \
   x11-fonts/liberation-fonts-ttf \
   x11-fonts/meslo \
   x11-fonts/roboto-fonts-ttf \
   x11-fonts/terminus-font \
   x11-fonts/webfonts \
+  xarchiver \
   xorg \
   xpdf \
+  zeal \
   \
   go \
   ImageMagick \
@@ -165,6 +186,7 @@ pkg install -y \
   python3 \
   qt5-webkit qt5-qmake qt5-buildtools \
   rbenv \
+  ruby \
   ruby-build \
   \
   dnsmasq \
@@ -178,24 +200,18 @@ pkg install -y \
 #  memcached \
 
 # Install ports
-# yarn - make config - select node8 - make install clean
-# postgis24 - make install clean (USES=pgsql by default installed version)
+# www/yarn - make config - select node8 - make install clean
+# databases/postgis24 - make install clean (USES=pgsql by default installed version)
 
 # OR use jails for app specific dependencies, and install latest globally
 
 # Set up fonts
-# Download and install SF fonts from Apple
-# If you install `x11-fonts/urwfonts-ttf` then disable all Nimbus fonts in font-manager
+# NOTE: If you install `x11-fonts/urwfonts-ttf` then disable all Nimbus fonts in font-manager
 # because Nimbus, as replacement for Helvetica, renders really compressed kerning in Firefox
-# Disable bitmap fonts (Eg. for github.com)
+# Disable bitmap fonts (Eg. for github.com), turn hinting off
+ln -s /usr/local/etc/fonts/conf.avail/10-hinting-none.conf /usr/local/etc/fonts/conf.d/
+ln -s /usr/local/etc/fonts/conf.avail/10-no-sub-pixel.conf /usr/local/etc/fonts/conf.d/
 ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
-
-# Alternatively, install minimum linux compatibility for Sublime Text
-# Swap for linux-c7 from above for:
-# pkg install -y \
-#   linux_base-c7 \
-#   linux-c7-xorg-libs \
-#   linux-c7-cairo linux-c7-gdk-pixbuf2 linux-c7-glx-utils linux-c7-gtk2
 
 # Add admin and video acceleration groups to user
 pw usermod "$CURRENT_USER" -G wheel,operator,video
@@ -203,32 +219,6 @@ pw usermod "$CURRENT_USER" -G wheel,operator,video
 # Initialize rpm database
 mkdir -p /var/lib/rpm
 /usr/local/bin/rpm --initdb
-
-# TODO: test if ST3 can use libinotify
-# Install Sublime Text 3
-currdir=$(pwd)
-cd /tmp
-curl -O https://download.sublimetext.com/files/sublime-text-3176-1.x86_64.rpm
-cd /compat/linux/
-rpm2cpio < /tmp/sublime-text-3176-1.x86_64.rpm | cpio -id
-ln -s /compat/linux/opt/sublime_text/sublime_text /usr/local/bin/subl
-cp /compat/linux/usr/share/applications/sublime_text.desktop /usr/local/share/applications/
-# change to Exec=/compat/linux/opt/sublime_text/sublime_text %F and StartupNotify=false
-# remove OnlyShowIn=Unity
-# cp /compat/linux/opt/sublime_text/Icon/128x128/sublime-text.png /usr/local/share/icons/
-# possibly above isn't required? icons copied automatically? - No
-cd $currdir
-
-# Install ruby-install - issues with readline, ruby-build works better
-# currdir=$(pwd)
-# cd /tmp
-# git clone https://github.com/steakknife/ruby-install-freebsd
-# cd ruby-install-freebsd
-# ./install
-# rm -rf /tmp/ruby-install-freebsd
-# cd /usr/ports/lang/ruby-install
-# make install clean
-# cd $currdir
 
 # Setup PostgreSQL
 /usr/local/etc/rc.d/postgresql oneinitdb
@@ -252,8 +242,14 @@ kern.maxproc=100000
 # Use newer vt console (is default now?)
 kern.vty=vt
 
+# Increase the network interface queue link - default 50
+net.link.ifqmaxlen="2048"
+
 # Tune ZFS Arc Size - Change to adjust memory used for disk cache
 vfs.zfs.arc_max="256M"
+
+# Enable CPU firmware updates
+cpuctl_load="YES"
 
 # Enable Android and Raspberry Pi tethering
 if_urndis_load="YES"
@@ -289,7 +285,16 @@ cuse4bsd_load="YES"
 # /etc/rc.conf
 # use sudo service <name> onestatus to check what is already running
 write_to_file '
-# Caps lock as control
+# Disable syslog open network sockets
+syslogd_flags="-ss"
+
+# Disable the sendmail daemon
+sendmail_enable="NONE"
+
+# Clear /tmp on reboot
+clear_tmp_enable="YES"
+
+# Caps lock as control in console
 keymap="us.ctrl.kbd"
 
 # Use DHCP for tethered Raspberry Pi
@@ -310,6 +315,9 @@ ntpd_enable="YES"
 # Let ntpd make time jumps larger than 1000sec
 ntpd_flags="-g"
 
+# Enable sndio for audio
+sndiod_enable="YES"
+
 # Enable webcam
 webcamd_enable="YES"
 
@@ -320,9 +328,8 @@ linux_enable="YES"
 devfs_system_ruleset="devfsrules_common"
 
 # Enable services for Gnome type desktops
-avahi_daemon_enable="YES"
 dbus_enable="YES"
-hald_enable="YES"
+hald_enable="NO" # prefer native devd instead
 
 # Start databases
 postgresql_enable="YES"
@@ -430,9 +437,6 @@ me:\\
         :lang=en_US.UTF-8:
 ' "/home/$CURRENT_USER/.login_conf"
 
-# /etc/hosts
-# TBD add domain to hostname?
-
 # firewall
 # TBD
 
@@ -489,13 +493,15 @@ if [ "$XFCE" = true ]; then
   pkg install -y \
     xfce \
     xfce4-mixer \
-    xfce4-power-manager \
     xfce4-netload-plugin \
+    xfce4-power-manager \
     xfce4-systemload-plugin \
+    xfce4-taskmanager \
     xfce4-weather-plugin \
     xfce4-whiskermenu-plugin \
     slim \
-    slim-themes
+    slim-themes \
+    thunar-archive-plugin
 
   write_to_file '
 # Enable SLiM login manager
