@@ -11,6 +11,7 @@
 # http://kev009.com/wp/2016/07/freebsd-uefi-root-on-zfs-and-windows-dual-boot/
 # https://www.keltia.net/howtos/mfsbsd-zfs11/
 # https://www.c0ffee.net/blog/freebsd-full-disk-encryption-uefi/
+# https://forums.freebsd.org/threads/cant-boot-on-uefi.68141/post-406138
 
 # Find device name, eg: ada0
 camcontrol devlist
@@ -21,7 +22,7 @@ camcontrol devlist
 
 # Create UEFI boot partition
 # gpart add -a 4k -s 200M -t efi -l boot0 ada0 # macOS has already created this
-gpart bootcode -p /boot/boot1.efifat -i 1 ada0
+gpart bootcode -p /boot/boot1.efifat -i 1 ada0 # creates an 800k FAT filesystem, not enough for rEFInd for example
 
 # Create swap and zfs partitions, align to 1m (align_big) [With GPT, we align
 # large partitions to 1m for improved performance on SSDs]
