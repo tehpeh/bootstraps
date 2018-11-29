@@ -22,6 +22,8 @@ set -e
 # check conf files on mac mini for additions
 # /usr/local/etc/rc.d/rslsync and download binary
 # try openmdns or mdnsresponder instead of avahi which didn't resolve .local for me
+# autofs: uncomment /etc/auto_master, create /etc/devd/autofs.conf, autofs_enable="YES", see https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/usb-disks.html
+# OR pkg install dsbmd dsbmc bdsmc-cli, dsbmd_enable="YES" - works better
 
 # Util functions
 
@@ -168,7 +170,7 @@ pkg install -y \
   x11-fonts/anonymous-pro \
   x11-fonts/dejavu \
   x11-fonts/droid-fonts-ttf \
-  x11-fonts/emojione-color-font-ttf \
+  x11-fonts/twemoji-color-font-ttf \
   x11-fonts/google-fonts \
   x11-fonts/liberation-fonts-ttf \
   x11-fonts/meslo \
@@ -187,6 +189,7 @@ pkg install -y \
   qt5-webkit qt5-qmake qt5-buildtools \
   rbenv \
   ruby \
+  devel/ruby-gems \
   ruby-build \
   \
   dnsmasq \
