@@ -24,6 +24,7 @@ set -e
 # try openmdns or mdnsresponder instead of avahi which didn't resolve .local for me
 # autofs: uncomment /etc/auto_master, create /etc/devd/autofs.conf, autofs_enable="YES", see https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/usb-disks.html
 # OR pkg install dsbmd dsbmc bdsmc-cli, dsbmd_enable="YES" - works better
+# enable inet6/ipv6 in rc.conf and pf.conf
 
 # Util functions
 
@@ -306,6 +307,9 @@ ifconfig_ue0="DHCP"
 # Do not wait for DHCP during boot
 background_dhclient="YES"
 
+# Enable PF
+pf_enable="YES"
+
 # Enable mouse
 moused_enable="YES"
 
@@ -440,8 +444,73 @@ me:\\
         :lang=en_US.UTF-8:
 ' "/home/$CURRENT_USER/.login_conf"
 
-# firewall
-# TBD
+# /etc/pf.conf
+write_to_file '
+# The name of our network interface as seen in `ifconfig`
+ext_if="wlan0"
+
+# Custom services
+resilio_sync = "55555"
+
+# Macros to define the set of TCP and UDP ports to open.
+# Add additional ports or ranges separated by commas.
+tcp_services = "{ssh, $resilio_sync}"
+udp_services = "{dhcpv6-client}"
+
+# If you block all ICMP requests you will break things like path MTU
+# discovery. These macros define allowed ICMP types. The additional
+# ICMPv6 types are for neighbor discovery (RFC 4861)
+icmp_types = "{echoreq, unreach}"
+icmp6_types="{echoreq, unreach, 133, 134, 135, 136, 137}"
+
+# Modulate the initial sequence number of TCP packets.
+# Broken operating systems sometimes dont randomize this number,
+# making it guessable.
+tcp_state="flags S/SA keep state"
+udp_state="keep state"
+
+# Drop blocked packets, causing clients to wait for timeout, or
+# set block-policy drop
+# Reject blocked packets
+set block-policy return
+
+# Exempt the loopback interface to prevent services utilizing the
+# local loop from being blocked accidentally.
+set skip on lo0
+
+# All incoming traffic on external interface is normalized and fragmented
+# packets are reassembled.
+scrub in on $ext_if all fragment reassemble
+
+# Set a default deny policy.
+block in log all
+
+# This is a desktop so be permissive in allowing outgoing connections.
+pass out quick modulate state
+
+# Enable antispoofing on the external interface
+antispoof for $ext_if inet
+antispoof for $ext_if inet6
+
+# block packets that fail a reverse path check. we look up the routing
+# table, check to make sure that the outbound is the same as the source
+# it came in on. if not, it is probably source address spoofed.
+block in from urpf-failed to any
+
+# drop broadcast requests quietly.
+block in quick on $ext_if from any to 255.255.255.255
+
+# Allow the services defined in the macros at the top of the file
+pass in on $ext_if inet proto tcp from any to any port $tcp_services $tcp_state
+pass in on $ext_if inet6 proto tcp from any to any port $tcp_services $tcp_state
+
+pass in on $ext_if inet proto udp from any to any port $udp_services $udp_state
+pass in on $ext_if inet6 proto udp from any to any port $udp_services $udp_state
+
+# Allow ICMP
+pass inet proto icmp all icmp-type $icmp_types keep state
+pass inet6 proto icmp6 all icmp6-type $icmp6_types keep state
+' /etc/pf.conf
 
 # Optional packages and configuration
 
