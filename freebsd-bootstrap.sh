@@ -205,7 +205,7 @@ ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/co
 # Add admin and video acceleration groups to user
 pw usermod "$CURRENT_USER" -G wheel,operator,video
 
-# Initialize rpm database
+# Initialize rpm database for installing linux packages
 # mkdir -p /var/lib/rpm
 # /usr/local/bin/rpm --initdb
 
