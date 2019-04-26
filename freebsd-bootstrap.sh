@@ -418,6 +418,11 @@ sshd_enable="YES"
 # Start databases
 postgresql_enable="YES"
 redis_enable="YES"
+
+# Run Resilio Sync
+# rslsync_enable="YES"
+# rslsync_user=""
+# rslsync_storage=""
 ' /etc/rc.conf
 
 # /etc/sysctl.conf
@@ -527,7 +532,7 @@ me:\\
 # /etc/pf.conf
 write_to_file '
 # The name of our network interface as seen in `ifconfig`
-ext_if="wlan0"
+ext_if="em0"
 
 # Custom services
 resilio_sync = "55555"
