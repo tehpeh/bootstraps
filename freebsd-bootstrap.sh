@@ -11,21 +11,6 @@ set -e
 # GhostBSD 11.1
 # https://www.c0ffee.net/blog/freebsd-on-a-laptop/
 
-# TODO
-#
-# - xorg config, if any?
-# key remap using xmod...
-# add ssl stuff to /etc/make.conf
-# use switch for latest repo
-# modify .xinitrc for locale
-# use fbsd theme in slim
-# check conf files on mac mini for additions
-# /usr/local/etc/rc.d/rslsync and download binary
-# try openmdns or mdnsresponder instead of avahi which didn't resolve .local for me
-# autofs: uncomment /etc/auto_master, create /etc/devd/autofs.conf, autofs_enable="YES", see https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/usb-disks.html
-# OR pkg install dsbmd dsbmc bdsmc-cli, dsbmd_enable="YES" - works better
-# enable inet6/ipv6 in rc.conf and pf.conf
-
 # Util functions
 
 show_help() {
@@ -157,14 +142,19 @@ pkg install -y \
   sudo \
   \
   chromium \
+  dsbmd \
+  dsbmc \
+  bdsmc-cli \
   emacs \
   firefox \
   font-manager \
   geary \
   gnome-keyring \
   gtk-arc-themes \
+  libdvdcss \
   linux-sublime3 \
   neovim \
+  redshift \
   seahorse \
   sndio \
   vim \
@@ -185,29 +175,24 @@ pkg install -y \
   \
   go \
   ImageMagick \
-  node8 \
+  node \
   python3 \
   qt5-webkit qt5-qmake qt5-buildtools \
   rbenv \
   ruby \
   devel/ruby-gems \
   ruby-build \
+  yarn \
   \
   dnsmasq \
   nginx  \
   postgresql10-server postgresql10-client postgresql10-contrib \
   redis
 
-# Extra dev services
+# Extra services
 #  rabbitmq \
 #  elasticsearch6 \
 #  memcached \
-
-# Install ports
-# www/yarn - make config - select node8 - make install clean
-# databases/postgis24 - make install clean (USES=pgsql by default installed version)
-
-# OR use jails for app specific dependencies, and install latest globally
 
 # Set up fonts
 # NOTE: If you install `x11-fonts/urwfonts-ttf` then disable all Nimbus fonts in font-manager
@@ -221,8 +206,8 @@ ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/co
 pw usermod "$CURRENT_USER" -G wheel,operator,video
 
 # Initialize rpm database
-mkdir -p /var/lib/rpm
-/usr/local/bin/rpm --initdb
+# mkdir -p /var/lib/rpm
+# /usr/local/bin/rpm --initdb
 
 # Setup PostgreSQL
 /usr/local/etc/rc.d/postgresql oneinitdb
@@ -247,7 +232,10 @@ kern.maxproc=100000
 kern.vty=vt
 
 # Increase the network interface queue link - default 50
-net.link.ifqmaxlen="2048"
+# net.link.ifqmaxlen="2048" # removed for now
+
+# Load accf_http, buffer incoming connections until a certain complete HTTP requests arrive
+accf_http_load="YES"
 
 # Tune ZFS Arc Size - Change to adjust memory used for disk cache
 vfs.zfs.arc_max="256M"
@@ -259,16 +247,16 @@ cpuctl_load="YES"
 if_urndis_load="YES"
 
 # Enable Wellspring touchpad driver (for Apple Internal Trackpad)
-wsp_load="NO"
+# wsp_load="YES"
 
 # Filesystems in Userspace
 fuse_load="YES"
 
 # Intel Core thermal sensors
-coretemp_load="NO"
+# coretemp_load="YES"
 
 # AMD K8, K10, K11 thermal sensors
-amdtemp_load="NO"
+# amdtemp_load="YES"
 
 # In-memory filesystems
 tmpfs_load="YES"
@@ -334,6 +322,9 @@ linux_enable="YES"
 # Enable our custom device ruleset
 devfs_system_ruleset="devfsrules_common"
 
+# Enable DSBMD with GUI for mounting external disks
+dsbmd_enable="YES"
+
 # Enable services for Gnome type desktops
 dbus_enable="YES"
 hald_enable="NO" # prefer native devd instead
@@ -365,8 +356,7 @@ vfs.usermount=1
 hw.usb.no_shutdown_wait=1
 
 # Disable the system bell
-kern.vt.enable_bell=0 # FreeBSD > 11
-hw.syscons.bell=0
+kern.vt.enable_bell=0
 # Select first sound card
 hw.snd.default_unit=0
 # Autodetect the most recent sound card. Uncomment for Digital output / USB
@@ -512,6 +502,50 @@ pass inet proto icmp all icmp-type $icmp_types keep state
 pass inet6 proto icmp6 all icmp6-type $icmp6_types keep state
 ' /etc/pf.conf
 
+# /etc/make.conf
+write_to_file '
+DEFAULT_VERSIONS+=ssl=openssl111
+WITH_CCACHE_BUILD=yes
+' /etc/make.conf
+
+# /usr/local/etc/rc.d/rslsync
+write_to_file '
+#!/bin/sh
+#
+# PROVIDE: rslsync
+# REQUIRE: LOGIN DAEMON NETWORKING
+# KEYWORD: shutdown
+#
+# To enable rslsync, add this line to your /etc/rc.conf:
+#
+# rslsync_enable="YES"
+#
+# And optionally these line:
+#
+# rslsync_user="username" # Default is "root"
+# rslsync_bin="/path/to/rslsync" # Default is "/usr/local/bin/rslsync"
+# rslsync_storage="/root/.config/rslsync"
+
+. /etc/rc.subr
+
+name="rslsync"
+rcvar="rslsync_enable"
+
+load_rc_config $name
+
+required_files=$rslsync_bin
+
+: ${rslsync_enable="NO"}
+: ${rslsync_user="root"}
+: ${rslsync_bin="/usr/local/bin/rslsync"}
+: ${rslsync_storage="/root/.config/rslsync"}
+
+command=$rslsync_bin
+command_args="--storage ${rslsync_storage}"
+
+run_rc_command "$1"
+' /usr/local/etc/rc.d/rslsync
+
 # Optional packages and configuration
 
 if [ "$VBOX" = true ]; then
@@ -580,11 +614,43 @@ if [ "$XFCE" = true ]; then
 slim_enable="YES"
 ' /etc/rc.conf
 
+  sed -i '' -e 's/current_theme.*$/current_theme       fbsd/g' /usr/local/etc/slim.conf
+
   cp /usr/local/etc/xdg/xfce4/xinitrc .xinitrc
   chown "$CURRENT_USER:$CURRENT_USER" .xinitrc
 
-  # set slim theme to fbsd
-  # Adjust mousewheel.default.delta_multiplier_y to 175 in Firefox, about:config
+  echo '2 i
+
+# Custom env
+export LANG="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+$HOME/bin/swapkeys &
+.
+w
+q
+' | ed .xinitrc
+
+  mkdir -p bin
+  write_to_file "
+#!/bin/sh
+
+caps2ctrl() {
+        xmodmap -e 'remove Lock = Caps_Lock'
+        xmodmap -e 'keysym Caps_Lock = Control_L'
+        xmodmap -e 'add Control = Control_L'
+}
+
+#ctrl2caps() {
+#        xmodmap -e 'remove Control = Control_R'
+#        xmodmap -e 'keysym Control_R = Caps_Lock'
+#        xmodmap -e 'add Lock = Caps_Lock'
+#}
+
+caps2ctrl
+" bin/swapkeys
+
+  chmod +x bin/swapkeys
+
 fi
 
 # Final message
