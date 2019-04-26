@@ -430,7 +430,9 @@ kern.ipc.shmall=32768
 kern.sched.preempt_thresh=224
 
 # Bump up maximum number of open files
-kern.maxfiles=200000
+kern.maxfilesperproc=1048576
+kern.maxvnodes=1048576
+kern.maxfiles=1048576
 
 # Enable shared memory for Chromium
 kern.ipc.shm_allow_removed=1
@@ -443,6 +445,8 @@ hw.usb.no_shutdown_wait=1
 
 # Disable the system bell
 kern.vt.enable_bell=0
+# Enable sound card polling
+# dev.hdac.0.polling=1
 # Select first sound card
 hw.snd.default_unit=0
 # Autodetect the most recent sound card. Uncomment for Digital output / USB
