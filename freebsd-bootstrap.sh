@@ -220,6 +220,10 @@ sudo -u postgres createdb "$CURRENT_USER"
 # /boot/loader.conf
 # use kldstat -v | grep <name> to check what is already loaded
 write_to_file '
+# Load crypto and geli
+aesni_load="YES"
+geom_eli_load="YES"
+
 # Reduce boot menu delay
 autoboot_delay="3"
 
@@ -232,31 +236,19 @@ kern.maxproc=100000
 kern.vty=vt
 
 # Increase the network interface queue link - default 50
-# net.link.ifqmaxlen="2048" # removed for now
+# net.link.ifqmaxlen="2048" # removed for now, causes issues
 
 # Load accf_http, buffer incoming connections until a certain complete HTTP requests arrive
 accf_http_load="YES"
 
-# Tune ZFS Arc Size - Change to adjust memory used for disk cache
+# Tune ZFS Arc Size - Change to adjust memory used for disk cache, default is half available RAM
 vfs.zfs.arc_max="256M"
 
 # Enable CPU firmware updates
 cpuctl_load="YES"
 
-# Enable Android and Raspberry Pi tethering
-if_urndis_load="YES"
-
-# Enable Wellspring touchpad driver (for Apple Internal Trackpad)
-# wsp_load="YES"
-
 # Filesystems in Userspace
 fuse_load="YES"
-
-# Intel Core thermal sensors
-# coretemp_load="YES"
-
-# AMD K8, K10, K11 thermal sensors
-# amdtemp_load="YES"
 
 # In-memory filesystems
 tmpfs_load="YES"
@@ -272,6 +264,47 @@ msdosfs_iconv_load="YES"
 
 # Userland character device driver for webcams
 cuse4bsd_load="YES"
+
+# Hardware specific:
+
+# Intel Core thermal sensors
+# coretemp_load="YES"
+
+# AMD K8, K10, K11 thermal sensors
+# amdtemp_load="YES"
+
+# Enable Apple System Management Console
+# asmc_load="YES"
+
+# Enable Wellspring touchpad driver (for Apple Internal Trackpad)
+# wsp_load="YES"
+
+# Switch to headphones when plugged in
+# hint.hdaa.0.nid9_config="as=3 seq=15"
+# TODO: research https://forums.freebsd.org/threads/changing-sound-devices-in-real-time.54229/
+
+# Enable Android and Raspberry Pi tethering
+# if_urndis_load="YES"
+
+# Disable cdce
+# hint.cdce.0.disabled="1"
+
+# Realtek RTL8192EU wireless USB driver
+# if_rtwn_usb_load="YES"
+# legal.realtek.license_ack=1
+
+# Ralink Technology USB IEEE 802.11a/b/g wireless driver
+# if_rum_load="YES"
+
+# Broadcom BMC43224
+# with GPL PHY version from net/bwn-firmware-kmod port
+# https://svnweb.freebsd.org/base?view=revision&revision=326841
+# http://landonf.org/code/freebsd/Broadcom_WiFi_Improvements.20180122.html
+# hw.bwn_pci.preferred="1"
+# if_bwn_pci_load="YES"
+# bwn_v4_ucode_load="YES"
+# bwn_v4_n_ucode_load="YES"
+# bwn_v4_lp_ucode_load="YES"
 ' /boot/loader.conf
 
 # /etc/rc.conf
