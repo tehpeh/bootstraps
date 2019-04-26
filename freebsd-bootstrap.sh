@@ -130,12 +130,14 @@ pkg install -y \
   git \
   gnupg \
   htop \
+  ipad_charge \
   keybase \
   libinotify \
   linux-c6 \
   openssl \
   password-store \
   pefs-kmod \
+  powerdxx \
   readline \
   rpm4 \
   tmux \
@@ -310,20 +312,37 @@ cuse4bsd_load="YES"
 # /etc/rc.conf
 # use sudo service <name> onestatus to check what is already running
 write_to_file '
+# Installer defaults: (may already exist)
+
+# Clear /tmp on reboot
+clear_tmp_enable="YES"
+
 # Disable syslog open network sockets
 syslogd_flags="-ss"
 
 # Disable the sendmail daemon
 sendmail_enable="NONE"
 
-# Clear /tmp on reboot
-clear_tmp_enable="YES"
+# Set hostname
+# hostname=""
 
-# Caps lock as control in console
-keymap="us.ctrl.kbd"
+# Networking:
 
-# Use DHCP for tethered Raspberry Pi
-ifconfig_ue0="DHCP"
+# Ethernet em0
+ifconfig_em0="DHCP"
+ifconfig_em0_ipv6="inet6 accept_rtadv"
+
+# Tethered Raspberry Pi
+# ifconfig_ue0="DHCP"
+
+# Wireless USB TP-Link rtwn0
+# wlans_rtwn0="wlan0"
+# ifconfig_wlan0="WPA DHCP"
+# OR ifconfig_wlan0="-ht WPA DHCP"
+
+# Wireless USB D-Link DWL-G122 rev C1 rum0
+# wlans_rum0="wlan1"
+# ifconfig_wlan1="WPA DHCP"
 
 # Do not wait for DHCP during boot
 background_dhclient="YES"
@@ -331,8 +350,27 @@ background_dhclient="YES"
 # Enable PF
 pf_enable="YES"
 
-# Enable mouse
+# Start OpenVPN client
+# openvpn_enable="YES"
+# openvpn_if="tun"
+# openvpn_configfile=""
+
+# Devices:
+
+# Caps lock as control in console
+keymap="us.ctrl.kbd"
+
+# Enable mouse in console
 moused_enable="YES"
+
+# powerdxx_enable="YES" # port, more conservative scaling
+powerd_enable="YES" # base, more aggressive scaling
+
+# Load nvidia-driver
+# kld_list="nvidia"
+
+# Load intel driver
+# kld_list="/boot/modules/i915kms.ko"
 
 # Enable BlueTooth
 hcsecd_enable="YES"
@@ -358,9 +396,24 @@ devfs_system_ruleset="devfsrules_common"
 # Enable DSBMD with GUI for mounting external disks
 dsbmd_enable="YES"
 
+# iPad charge
+ipad_charge_enable="YES"
+
+# Services:
+
 # Enable services for Gnome type desktops
+# avahi_daemon_enable="YES"
 dbus_enable="YES"
-hald_enable="NO" # prefer native devd instead
+# hald_enable="YES" # prefer native devd instead
+
+# Start sshd
+sshd_enable="YES"
+
+# Start dnsmasq
+# dnsmasq_enable="YES"
+
+# Start nginx
+# nginx_enable="YES"
 
 # Start databases
 postgresql_enable="YES"
