@@ -196,6 +196,8 @@ pkg install -y \
 #  elasticsearch6 \
 #  memcached \
 
+# TODO: There is a port available for resilio sync, no package, at net-p2p/rslsync
+
 # Set up fonts
 # NOTE: If you install `x11-fonts/urwfonts-ttf` then disable all Nimbus fonts in font-manager
 # because Nimbus, as replacement for Helvetica, renders really compressed kerning in Firefox
@@ -233,9 +235,6 @@ autoboot_delay="3"
 kern.ipc.shmseg=1024
 kern.ipc.shmmni=1024
 kern.maxproc=100000
-
-# Use newer vt console (is default now?)
-kern.vty=vt
 
 # Increase the network interface queue link - default 50
 # net.link.ifqmaxlen="2048" # removed for now, causes issues
@@ -539,7 +538,7 @@ resilio_sync = "55555"
 
 # Macros to define the set of TCP and UDP ports to open.
 # Add additional ports or ranges separated by commas.
-tcp_services = "{ssh, $resilio_sync}"
+tcp_services = "{ssh," $resilio_sync "}"
 udp_services = "{dhcpv6-client}"
 
 # If you block all ICMP requests you will break things like path MTU
