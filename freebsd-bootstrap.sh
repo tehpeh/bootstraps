@@ -721,32 +721,19 @@ slim_enable="YES"
 # Custom env
 export LANG="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
-$HOME/bin/swapkeys &
 .
 w
 q
 ' | ed .xinitrc
 
-  mkdir -p bin
   write_to_file "
-#!/bin/sh
-
-caps2ctrl() {
-        xmodmap -e 'remove Lock = Caps_Lock'
-        xmodmap -e 'keysym Caps_Lock = Control_L'
-        xmodmap -e 'add Control = Control_L'
-}
-
-#ctrl2caps() {
-#        xmodmap -e 'remove Control = Control_R'
-#        xmodmap -e 'keysym Control_R = Caps_Lock'
-#        xmodmap -e 'add Lock = Caps_Lock'
-#}
-
-caps2ctrl
-" bin/swapkeys
-
-  chmod +x bin/swapkeys
+xmodmap -e 'remove Lock = Caps_Lock'
+xmodmap -e 'keysym Caps_Lock = Control_L'
+xmodmap -e 'add Control = Control_L'
+# xmodmap -e 'remove Control = Control_R'
+# xmodmap -e 'keysym Control_R = Caps_Lock'
+# xmodmap -e 'add Lock = Caps_Lock'
+" "/home/$CURRENT_USER/.Xmodmap"
 
 fi
 
