@@ -381,6 +381,9 @@ ntpd_flags="-g"
 
 # Enable sndio for audio
 sndiod_enable="YES"
+# Exmaple flags:
+# sndiod_flags="-f rsnd/4 -c 0:1 -m play -s default -m mon -s monitor"
+# sndiod_flags="-f rsnd/3 -m rec -s default"
 
 # Enable webcam
 webcamd_enable="YES"
