@@ -123,8 +123,8 @@ pkg upgrade -y
 
 pkg install -y \
   curl \
-  cuse4bsd-kmod \
   direnv \
+  en-hunspell \
   fish \
   fusefs-encfs \
   git \
@@ -133,7 +133,7 @@ pkg install -y \
   ipad_charge \
   keybase \
   libinotify \
-  linux-c6 \
+  linux-c7 \
   openssl \
   password-store \
   pefs-kmod \
@@ -263,8 +263,8 @@ libmchain_load="YES"
 cd9660_iconv_load="YES"
 msdosfs_iconv_load="YES"
 
-# Userland character device driver for webcams
-cuse4bsd_load="YES"
+# Userland character device library (for webcams FreeBSD > 11)
+cuse_load="YES"
 
 # Hardware specific:
 
@@ -656,6 +656,7 @@ fi
 
 if [ "$VMWARE" = true ]; then
   pkg install -y xf86-input-vmmouse xf86-video-vmware open-vm-tools
+  # use open-vm-tools-nox11 for servers
 
   write_to_file '
 # Enable VMWare Guest Additions
