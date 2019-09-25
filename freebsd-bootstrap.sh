@@ -695,13 +695,20 @@ fi
 if [ "$XFCE" = true ]; then
   pkg install -y \
     xfce \
+    xfce-evolution \
+    xfce4-clipman-plugin \
+    xfce4-cpugraph-plugin \
+    xfce4-genmon-plugin \
     xfce4-mixer \
     xfce4-netload-plugin \
     xfce4-power-manager \
+    xfce4-screensaver \
     xfce4-systemload-plugin \
     xfce4-taskmanager \
     xfce4-weather-plugin \
     xfce4-whiskermenu-plugin \
+    xfce4-wm-themes \
+    greybird-theme \
     slim \
     slim-themes \
     thunar-archive-plugin
