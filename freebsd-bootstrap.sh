@@ -147,7 +147,6 @@ pkg install -y \
   dsbmd \
   dsbmc \
   bdsmc-cli \
-  emacs \
   firefox \
   font-manager \
   geary \
