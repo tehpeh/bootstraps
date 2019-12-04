@@ -384,6 +384,7 @@ sndiod_enable="YES"
 # Exmaple flags:
 # sndiod_flags="-f rsnd/4 -c 0:1 -m play -s default -m mon -s monitor"
 # sndiod_flags="-f rsnd/3 -m rec -s default"
+# add media.cubeb.backend=sndio to firefox about:config - not necessary?
 
 # Enable webcam
 webcamd_enable="YES"
@@ -696,22 +697,25 @@ if [ "$XFCE" = true ]; then
   pkg install -y \
     xfce \
     xfce-evolution \
-    xfce4-clipman-plugin \
-    xfce4-cpugraph-plugin \
-    xfce4-genmon-plugin \
+    xfce4-goodies \
     xfce4-mixer \
-    xfce4-netload-plugin \
-    xfce4-power-manager \
-    xfce4-screensaver \
-    xfce4-systemload-plugin \
-    xfce4-taskmanager \
-    xfce4-weather-plugin \
-    xfce4-whiskermenu-plugin \
-    xfce4-wm-themes \
     greybird-theme \
     slim \
-    slim-themes \
-    thunar-archive-plugin
+    slim-themes
+
+    # Covered with xfce4-goodies:
+    # xfce4-clipman-plugin \
+    # xfce4-cpugraph-plugin \
+    # xfce4-genmon-plugin \
+    # xfce4-netload-plugin \
+    # xfce4-power-manager \
+    # xfce4-screensaver \
+    # xfce4-systemload-plugin \
+    # xfce4-taskmanager \
+    # xfce4-wm-themes \
+    # xfce4-weather-plugin \
+    # xfce4-whiskermenu-plugin \
+    # thunar-archive-plugin
 
   write_to_file '
 # Enable SLiM login manager
