@@ -10,6 +10,11 @@ set -e
 # TrueOS Desktop install July 2017
 # GhostBSD 11.1
 # https://www.c0ffee.net/blog/freebsd-on-a-laptop/
+#
+# TODO:
+#
+# - add custom files/mods from /usr/local/etc/devd/
+# - update pf.conf
 
 # Util functions
 
@@ -603,6 +608,10 @@ pass inet6 proto icmp6 all icmp6-type $icmp6_types keep state
 write_to_file '
 DEFAULT_VERSIONS+=ssl=openssl111
 WITH_CCACHE_BUILD=yes
+# Audio systems
+OPTIONS_SET+=SNDIO # enable sndio compile option
+OPTIONS_SET+=PORTAUDIO # Portaudio supports sndio, so more software supports sndio (gqrx is an example)
+OPTIONS_UNSET=PULSEAUDIO PULSE #ALSA # disable other audio systems
 ' /etc/make.conf
 
 # /usr/local/etc/rc.d/rslsync
