@@ -663,7 +663,16 @@ vboxguest_enable="YES"
 vboxservice_enable="YES"
 ' /etc/rc.conf
 
-sysrc moused_enable="NO"
+mkdir -p /usr/local/etc/X11/xorg.conf.d
+
+write_to_file '
+Section "InputDevice"
+    Identifier "Mouse0"
+    Driver "vboxmouse"
+EndSection
+' /usr/local/etc/X11/xorg.conf.d/10-vboxmouse.conf
+
+sysrc moused_enable="YES"
 fi
 
 if [ "$VMWARE" = true ]; then
