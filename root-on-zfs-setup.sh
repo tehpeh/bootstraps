@@ -13,6 +13,8 @@
 # https://www.c0ffee.net/blog/freebsd-full-disk-encryption-uefi/
 # https://forums.freebsd.org/threads/cant-boot-on-uefi.68141/post-406138
 
+# Obsolete: from 12.1-STABLE you can boot directly from a geli encrypted ZFS partition.
+
 # Find device name, eg: ada0
 camcontrol devlist
 
