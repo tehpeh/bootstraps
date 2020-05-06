@@ -52,7 +52,7 @@ zpool create -o altroot=/mnt zroot gpt/zfs0 # NO GELI, ignore mount error
 # geli init options:
 # -l 128/256 - key length
 # -b - decrypt during boot (use with bootpool)
-# -g - enable booting from this encrypted root filesystem (does not yet work on UEFI? supposed to use -bg)
+# -g - enable booting from this encrypted root filesystem (does not work on UEFI unless system is newer than 12.1-RELEASE. STABLE snapshot works, use -bg flags together)
   geli init -b -s 4096 -K /mnt/boot/encryption.key /dev/gpt/zfs0
   geli attach -K /mnt/boot/encryption.key /dev/gpt/zfs0
   dd if=/dev/random of=/dev/gpt/zfs0.eli bs=1m
