@@ -389,7 +389,7 @@ sndiod_enable="YES"
 # Exmaple flags:
 # sndiod_flags="-f rsnd/4 -c 0:1 -m play -s default -m mon -s monitor"
 # sndiod_flags="-f rsnd/3 -m rec -s default"
-# add media.cubeb.backend=sndio to firefox about:config - not necessary?
+# add media.cubeb.backend=sndio to firefox about:config - not necessary
 
 # Enable webcam
 webcamd_enable="YES"
