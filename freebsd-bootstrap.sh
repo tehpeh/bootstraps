@@ -15,6 +15,7 @@ set -e
 #
 # - add custom files/mods from /usr/local/etc/devd/
 # - update pf.conf
+# - add /usr/local/etc/rc.d/virtual_oss
 
 # Util functions
 
@@ -718,8 +719,9 @@ if [ "$XFCE" = true ]; then
     xfce4-goodies \
     xfce4-mixer \
     greybird-theme \
-    slim \
-    slim-themes
+    lightdm \
+    lightdm-gtk-greeter \
+    lightdm-gtk-greeter-settings
 
     # Covered with xfce4-goodies:
     # xfce4-clipman-plugin \
@@ -736,32 +738,19 @@ if [ "$XFCE" = true ]; then
     # thunar-archive-plugin
 
   write_to_file '
-# Enable SLiM login manager
-slim_enable="YES"
+# Enable LightDM display manager
+lightdm_enable="YES"
 ' /etc/rc.conf
 
-  sed -i '' -e 's/current_theme.*$/current_theme       fbsd/g' /usr/local/etc/slim.conf
-
-  cp /usr/local/etc/xdg/xfce4/xinitrc .xinitrc
-  chown "$CURRENT_USER:$CURRENT_USER" .xinitrc
-
-  echo '2 i
-
-# Custom env
+  write_to_file '
 export LANG="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
-.
-w
-q
-' | ed .xinitrc
+' ."/home/$CURRENT_USER/.xprofile"
 
   write_to_file "
-xmodmap -e 'remove Lock = Caps_Lock'
-xmodmap -e 'keysym Caps_Lock = Control_L'
-xmodmap -e 'add Control = Control_L'
-# xmodmap -e 'remove Control = Control_R'
-# xmodmap -e 'keysym Control_R = Caps_Lock'
-# xmodmap -e 'add Lock = Caps_Lock'
+remove Lock = Caps_Lock
+keysym Caps_Lock = Control_L
+add Control = Control_L
 " "/home/$CURRENT_USER/.Xmodmap"
 
 fi
