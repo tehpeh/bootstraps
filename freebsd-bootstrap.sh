@@ -15,7 +15,6 @@ set -e
 #
 # - add custom files/mods from /usr/local/etc/devd/
 # - update pf.conf
-# - add /usr/local/etc/rc.d/virtual_oss
 
 # Util functions
 
@@ -130,6 +129,7 @@ pkg upgrade -y
 pkg install -y \
   curl \
   direnv \
+  doas \
   en-hunspell \
   fish \
   fusefs-encfs \
@@ -155,16 +155,17 @@ pkg install -y \
   bdsmc-cli \
   firefox \
   font-manager \
-  geary \
   gnome-keyring \
   gtk-arc-themes \
   libdvdcss \
-  linux-sublime3 \
+  linux-sublime-text4 \
   neovim \
   redshift \
   seahorse \
   sndio \
+  thunderbird \
   vim \
+  virtual_oss \
   x11-fonts/anonymous-pro \
   x11-fonts/dejavu \
   x11-fonts/droid-fonts-ttf \
@@ -206,7 +207,6 @@ pkg install -y \
 # Set up fonts
 # NOTE: If you install `x11-fonts/urwfonts-ttf` then disable all Nimbus fonts in font-manager
 # because Nimbus, as replacement for Helvetica, renders really compressed kerning in Firefox
-# Disable bitmap fonts (Eg. for github.com), turn hinting off
 ln -s /usr/local/etc/fonts/conf.avail/10-hinting-none.conf /usr/local/etc/fonts/conf.d/
 ln -s /usr/local/etc/fonts/conf.avail/10-no-sub-pixel.conf /usr/local/etc/fonts/conf.d/
 ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
@@ -385,11 +385,24 @@ ntpd_enable="YES"
 # Let ntpd make time jumps larger than 1000sec
 ntpd_flags="-g"
 
+# Enable virtual_oss to combine audio devices
+# Output is USB Scarlett, input is USB webcam
+# virtual_oss_enable="YES"
+# virtual_oss_dsp="-T /dev/sndstat \
+# -C 2 -c 2 \
+# -S \
+# -r 48000 \
+# -b 16 \
+# -s 1024 \
+# -O /dev/dsp4 \
+# -R /dev/dsp3 \
+# -d dsp
+# -t dsp.ctl"
+
 # Enable sndio for audio
-sndiod_enable="YES"
-# Exmaple flags:
-# sndiod_flags="-f rsnd/4 -c 0:1 -m play -s default -m mon -s monitor"
-# sndiod_flags="-f rsnd/3 -m rec -s default"
+# sndiod_enable="YES"
+# sndiod_flags="-j on" # use this with virtual_oss and/or Chromium
+# sndiod_flags="-j on -r 96000 -e s24" # use with virtual_oss@96k24bit
 # add media.cubeb.backend=sndio to firefox about:config - not necessary
 
 # Enable webcam
@@ -416,6 +429,7 @@ dbus_enable="YES"
 
 # Start sshd
 sshd_enable="YES"
+sshd_flags="-o ListenAddress=HOSTNAME" # dont listen on cloned loopback interface
 
 # Start dnsmasq
 # dnsmasq_enable="YES"
@@ -745,6 +759,7 @@ lightdm_enable="YES"
   write_to_file '
 export LANG="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
+export TZ=":Australia/Sydney"
 ' ."/home/$CURRENT_USER/.xprofile"
 
   write_to_file "

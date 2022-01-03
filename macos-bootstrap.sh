@@ -30,19 +30,16 @@ cp -n dotfiles/macosx/.ssh/config ~/.ssh/config
 xcode-select --install
 
 # Install Homebrew
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-# Add Homebrew Cask
-brew tap caskroom/cask
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Install Mac apps
 
 brew cask install \
   alfred \
-  colloquy \
+  caffeine \
+  dash \
   firefox \
-  glimmerblocker \
   google-chrome \
-  google-cloud-sdk \
   hyperswitch \
   omnidisksweeper \
   rowanj-gitx \
@@ -50,29 +47,29 @@ brew cask install \
   sketch \
   sketch-toolbox \
   slack \
-  toggldesktop \
-  spotify \
   sublime-text \
   vagrant \
   vienna \
   virtualbox \
   vlc \
-  yujitach-menumeters \
+  menumeters \
 
 # Install command line apps
 
 brew install \
   ack \
-  ansible \
-  bash-completion \
+  direnv \
   docker \
   docker-machine \
   docker-compose \
-  docker-swarm \
+  fish \
   go \
   git \
   imagemagick #--disable-openmp --build-from-source \
   node \
+  nvim \
+  pass \
+  pass-otp \
   proctools \
   qt@5.5 \
   rbenv \
@@ -108,12 +105,8 @@ echo "========================================"
 echo "1Password"
 echo "Airmail"
 echo "Numbers, Pages, Keynote"
-echo "Caffeine"
-echo "Dash"
 echo "Wifi Explorer"
 echo "Wifi Signal"
 echo "The Unarchiver"
-echo "Twitter"
 echo "Pixelmator"
 echo "ForkLift"
-echo "Mac OS X Server"
