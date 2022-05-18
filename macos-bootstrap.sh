@@ -86,6 +86,10 @@ brew install \
 
 # NOTE: imagemagick may need flags: --disable-openmp --build-from-source
 
+# Install Heroku CLI
+brew tap heroku/brew
+brew install heroku
+
 # Install browserpass native client
 brew tap amar1729/formulae
 brew install browserpass
