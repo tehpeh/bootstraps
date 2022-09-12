@@ -1,28 +1,7 @@
 #!/bin/bash
 set -e
 
-# Download: curl -LO https://bit.ly/macos-bootstrap
-
-# Symlink dotfiles
-# TODO: redo/rethink this section, can pull these files from backup
-# IDEA: remove . from source files and prefix to target file
-# IDEA: add sublime packages/user files
-# IDEA: make a separate git repo or folder for all this, including dot/config files
-# FILES=./macosx/.*
-# for f in $FILES; do
-#   if [[ $f =~ .DS_Store$ ]]; then
-#     continue
-#   fi
-#   if [[ -f $f ]]; then
-#     echo "Linking $f to ~"
-#     ln -sf $f ~
-#   fi
-# done
-
-# Copy .ssh/config
-# mkdir -p ~/.ssh
-# chmod 700 ~/.ssh
-# cp -n dotfiles/macosx/.ssh/config ~/.ssh/config
+# Download: curl -LO https://bit.ly/bootstrap-macos
 
 # Install Xcode Command Line Tools
 xcode-select --install
