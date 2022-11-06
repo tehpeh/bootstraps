@@ -76,6 +76,10 @@ chmod 1777 /mnt/var/tmp
 chmod 1777 /mnt/tmp
 zpool set bootfs=zroot/ROOT/default zroot
 
+cat << EOF > /tmp/bsdinstall_boot/loader.conf.geli
+geom_eli_load="YES"
+EOF
+
 # Create /tmp/bsdinstall_etc/fstab
 cat << EOF > /tmp/bsdinstall_etc/fstab
 # Device                       Mountpoint              FStype  Options         Dump    Pass#
