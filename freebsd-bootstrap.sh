@@ -20,10 +20,13 @@ set -e
 
 show_help() {
   cat << EOT
-usage: freebsd-bootstrap.sh [--gnome][--xfce][--vbox][--vmware]|[--help]
+usage: freebsd-bootstrap.sh [--gnome][--kde][--xfce][--vbox][--vmware]|[--help]
 
 --gnome
-  Install Gnome 3
+  Install Gnome
+
+--kde
+  Install KDE
 
 --xfce
   Install XFCE
@@ -48,6 +51,7 @@ write_to_file () {
 
 VERSION="0.1"
 GNOME=false
+KDE=false
 XFCE=false
 VBOX=false
 VMWARE=false
@@ -59,8 +63,12 @@ while :; do
         exit
         ;;
     --gnome)
-        echo "Installing Gnome 3"
+        echo "Installing Gnome"
         GNOME=true
+        ;;
+    --kde)
+        echo "Installing KDE"
+        KDE=true
         ;;
     --xfce)
         echo "Installing XFCE"
@@ -121,12 +129,15 @@ fi
 #   sed -i '' -e 's/quarterly/latest/g' /usr/local/etc/pkg/repos/FreeBSD.conf
 # fi
 
+pkg bootstrap -y
 pkg update
 pkg upgrade -y
 
-# Install packages
-
+# Install utilities
 pkg install -y \
+  bastille \
+  bhyve-firmware \
+  ca_root_nss \
   curl \
   direnv \
   doas \
@@ -135,9 +146,11 @@ pkg install -y \
   fusefs-encfs \
   git \
   gnupg \
+  grub2-bhyve \
   htop \
   ipad_charge \
   keybase \
+  libdvdcss \
   libinotify \
   linux-c7 \
   openssl \
@@ -146,42 +159,43 @@ pkg install -y \
   powerdxx \
   readline \
   rpm4 \
-  tmux \
   sudo \
-  \
+  tmux \
+  vm-bhyve \
+
+# Install applications
+pkg install -y \
   chromium \
-  dsbmd \
   dsbmc \
-  bdsmc-cli \
+  dsbmc-cli \
+  dsbmd \
+  dsbmixer \
   firefox \
-  font-manager \
-  gnome-keyring \
-  gtk-arc-themes \
-  libdvdcss \
   linux-sublime-text4 \
   neovim \
-  redshift \
-  seahorse \
   sndio \
   thunderbird \
-  vim \
+  tigervnc-viewer \
   virtual_oss \
   x11-fonts/anonymous-pro \
   x11-fonts/dejavu \
   x11-fonts/droid-fonts-ttf \
-  x11-fonts/twemoji-color-font-ttf \
   x11-fonts/google-fonts \
-  x11-fonts/noto-emoji \
   x11-fonts/liberation-fonts-ttf \
   x11-fonts/meslo \
+  x11-fonts/noto-emoji \
   x11-fonts/roboto-fonts-ttf \
   x11-fonts/terminus-font \
+  x11-fonts/twemoji-color-font-ttf \
   x11-fonts/webfonts \
-  xarchiver \
   xorg \
-  xpdf \
   zeal \
-  \
+  # drm-kmod \
+  # nvidia-driver \
+
+# Install development environment
+pkg install -y \
+  devel/ruby-gems \
   go \
   ImageMagick \
   node \
@@ -189,28 +203,28 @@ pkg install -y \
   qt5-webkit qt5-qmake qt5-buildtools \
   rbenv \
   ruby \
-  devel/ruby-gems \
   ruby-build \
   yarn \
-  \
+
+# Install services
+pkg install -y \
   dnsmasq \
   nginx  \
-  postgresql10-server postgresql10-client postgresql10-contrib \
-  redis
-
-# Extra services
-#  rabbitmq \
-#  elasticsearch6 \
-#  memcached \
+  postgresql14-server postgresql14-client postgresql14-contrib \
+  redis \
+  # elasticsearch7 \
+  # memcached \
+  # opensearch \
+  # rabbitmq \
 
 # TODO: There is a port available for resilio sync, no package, at net-p2p/rslsync
 
 # Set up fonts
 # NOTE: If you install `x11-fonts/urwfonts-ttf` then disable all Nimbus fonts in font-manager
 # because Nimbus, as replacement for Helvetica, renders really compressed kerning in Firefox
-ln -s /usr/local/etc/fonts/conf.avail/10-hinting-none.conf /usr/local/etc/fonts/conf.d/
-ln -s /usr/local/etc/fonts/conf.avail/10-no-sub-pixel.conf /usr/local/etc/fonts/conf.d/
-ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
+# ln -s /usr/local/etc/fonts/conf.avail/10-hinting-none.conf /usr/local/etc/fonts/conf.d/
+# ln -s /usr/local/etc/fonts/conf.avail/10-no-sub-pixel.conf /usr/local/etc/fonts/conf.d/
+# ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
 
 # Add admin and video acceleration groups to user
 pw usermod "$CURRENT_USER" -G wheel,operator,video
@@ -222,7 +236,7 @@ pw usermod "$CURRENT_USER" -G wheel,operator,video
 # Setup PostgreSQL
 /usr/local/etc/rc.d/postgresql oneinitdb
 service postgresql onestart
-sudo -u postgres createuser -s "$CURRENT_USER" # use user pgsql for pg95
+sudo -u postgres createuser -s "$CURRENT_USER"
 sudo -u postgres createdb "$CURRENT_USER"
 
 # Write default configuration files
@@ -372,10 +386,17 @@ moused_enable="YES"
 powerd_enable="YES" # base, more aggressive scaling
 
 # Load nvidia-driver
-# kld_list="nvidia"
+# kld_list+=nvidia
+# kld_list+=nvidia-modeset  # use this if issues
 
-# Load intel driver
-# kld_list="/boot/modules/i915kms.ko"
+# Load Intel driver
+# kld_list+=i915kms
+
+# Load AMD driver
+# kld_list+=amdgpu
+
+# Load Radeon KMS
+# kld_list+=radeonkms
 
 # Enable BlueTooth
 hcsecd_enable="YES"
@@ -426,7 +447,6 @@ ipad_charge_enable="YES"
 # Enable services for Gnome type desktops
 # avahi_daemon_enable="YES"
 dbus_enable="YES"
-# hald_enable="YES" # prefer native devd instead
 
 # Start sshd
 sshd_enable="YES"
@@ -485,9 +505,6 @@ hw.snd.default_unit=0
 write_to_file '
 proc\t/proc\tprocfs\trw\t0\t0
 fdesc\t/dev/fd\tfdescfs\trw,auto,late\t0\t0
-linprocfs\t/compat/linux/proc\tlinprocfs\trw\t0\t0
-tmpfs\t/compat/linux/dev/shm\ttmpfs\trw,mode=1777\t0\t0
-linsysfs\t/compat/linux/sys\tlinsysfs\trw\t0\t0
 ' /etc/fstab
 
 # /etc/devfs.conf
@@ -717,7 +734,7 @@ sysrc moused_enable="YES"
 fi
 
 if [ "$GNOME" = true ]; then
-  pkg install -y gnome3
+  pkg install -y gnome
 fi
 
 if [ "$GNOME" = true && "$XFCE" = false ]; then
@@ -727,12 +744,19 @@ gdm_enable="YES"
 ' /etc/rc.conf
 fi
 
+if [ "$KDE" = true ]; then
+  pkg install -y kde5 sddm
+
+  write_to_file '
+# Enable KDE login manager
+sddm_enable="YES"
+' /etc/rc.conf
+fi
+
 if [ "$XFCE" = true ]; then
   pkg install -y \
     xfce \
-    xfce-evolution \
     xfce4-goodies \
-    xfce4-mixer \
     greybird-theme \
     lightdm \
     lightdm-gtk-greeter \
@@ -751,6 +775,18 @@ if [ "$XFCE" = true ]; then
     # xfce4-weather-plugin \
     # xfce4-whiskermenu-plugin \
     # thunar-archive-plugin
+
+  # Extra applications
+  pkg install -y \
+    font-manager \
+    gnome-keyring \
+    gtk-arc-themes \
+    networkmgr \
+    redshift \
+    seahorse \
+    wifimgr \
+    xarchiver \
+    xpdf \
 
   write_to_file '
 # Enable LightDM display manager
