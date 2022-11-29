@@ -386,17 +386,19 @@ moused_enable="YES"
 powerd_enable="YES" # base, more aggressive scaling
 
 # Load nvidia-driver
-# kld_list+=nvidia
-# kld_list+=nvidia-modeset  # use this if issues
+# kld_list="nvidia"
+# kld_list="nvidia-modeset"  # use this if issues
 
 # Load Intel driver
-# kld_list+=i915kms
+# kld_list="i915kms"
+# kld_list="/boot/modules/i915kms.ko"  # for 12.0?
 
 # Load AMD driver
-# kld_list+=amdgpu
+# kld_list="amdgpu"
 
 # Load Radeon KMS
-# kld_list+=radeonkms
+# kld_list="radeonkms"
+# kld_list="/boot/modules/radeonkms.ko"  # for 12.0?
 
 # Enable BlueTooth
 hcsecd_enable="YES"
