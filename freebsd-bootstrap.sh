@@ -197,7 +197,7 @@ pkg install -y \
 pkg install -y \
   devel/ruby-gems \
   go \
-  ImageMagick \
+  ImageMagick7 \
   node \
   python3 \
   qt5-webkit qt5-qmake qt5-buildtools \
