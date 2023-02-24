@@ -269,7 +269,7 @@ vfs.zfs.arc_max="256M"
 cpuctl_load="YES"
 
 # Filesystems in Userspace
-fuse_load="YES"
+fusefs_load="YES"
 
 # In-memory filesystems
 tmpfs_load="YES"
