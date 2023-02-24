@@ -144,6 +144,8 @@ pkg install -y \
   en-hunspell \
   fish \
   fusefs-encfs \
+  fusefs-exfat \
+  fusefs-ntfs \
   git \
   gnupg \
   grub2-bhyve \
