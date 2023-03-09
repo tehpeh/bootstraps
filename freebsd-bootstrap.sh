@@ -157,6 +157,7 @@ pkg install -y \
   linux-c7 \
   openssl \
   password-store \
+  pass-otp \
   pefs-kmod \
   powerdxx \
   readline \
