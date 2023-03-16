@@ -163,6 +163,7 @@ pkg install -y \
   powerdxx \
   readline \
   rpm4 \
+  smartmontools \
   sudo \
   tig \
   tmux \
@@ -461,6 +462,9 @@ dbus_enable="YES"
 sshd_enable="YES"
 sshd_flags="-o ListenAddress=HOSTNAME" # dont listen on cloned loopback interface
 
+# Start smartd
+smartd_enable="YES"
+
 # Start dnsmasq
 # dnsmasq_enable="YES"
 
@@ -693,6 +697,9 @@ command_args="--storage ${rslsync_storage}"
 
 run_rc_command "$1"
 ' /usr/local/etc/rc.d/rslsync
+
+# Smartmontools config
+cp /usr/local/etc/smartd.conf{.sample,}
 
 # Optional packages and configuration
 
