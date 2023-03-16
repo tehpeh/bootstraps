@@ -163,6 +163,7 @@ pkg install -y \
   readline \
   rpm4 \
   sudo \
+  tig \
   tmux \
   vm-bhyve \
 
