@@ -139,6 +139,7 @@ pkg install -y \
   bhyve-firmware \
   ca_root_nss \
   curl \
+  devcpu-data \
   direnv \
   doas \
   en-hunspell \
@@ -269,8 +270,10 @@ accf_http_load="YES"
 # Tune ZFS Arc Size - Change to adjust memory used for disk cache, default is half available RAM
 vfs.zfs.arc_max="256M"
 
-# Enable CPU firmware updates
-cpuctl_load="YES"
+# Install CPU microcode updates
+cpu_microcode_load="YES"
+#cpu_microcode_name="/boot/firmware/intel-ucode.bin"
+#cpu_microcode_name="/boot/firmware/amd-ucode.bin"
 
 # Filesystems in Userspace
 fusefs_load="YES"
