@@ -48,6 +48,7 @@ geli attach /dev/gpt/zfs0
 zpool create -o altroot=/mnt -m none zroot gpt/zfs0.eli
 
 # Set defaults
+# Latest compression algo is zstd
 zfs set compression=lz4                                        zroot
 zfs set atime=off                                              zroot
 
