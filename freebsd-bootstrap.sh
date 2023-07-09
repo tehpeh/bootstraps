@@ -153,6 +153,7 @@ pkg install -y \
   htop \
   ipad_charge \
   keybase \
+  keychain \
   libdvdcss \
   libinotify \
   linux-c7 \
