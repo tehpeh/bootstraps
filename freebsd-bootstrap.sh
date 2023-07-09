@@ -779,7 +779,7 @@ gdm_enable="YES"
 fi
 
 if [ "$KDE" = true ]; then
-  pkg install -y kde5 sddm
+  pkg install -y kde5 sddm pinentry-qt5
 
   write_to_file '
 # Enable KDE login manager
@@ -816,6 +816,7 @@ if [ "$XFCE" = true ]; then
     gnome-keyring \
     gtk-arc-themes \
     networkmgr \
+    pinentry-gnome \
     redshift \
     seahorse \
     wifimgr \
