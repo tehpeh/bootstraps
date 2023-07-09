@@ -156,6 +156,7 @@ pkg install -y \
   keychain \
   libdvdcss \
   libinotify \
+  libu2f-host \
   linux-c7 \
   openssl \
   password-store \
@@ -196,6 +197,7 @@ pkg install -y \
   x11-fonts/twemoji-color-font-ttf \
   x11-fonts/webfonts \
   xorg \
+  yubioath-desktop \
   zeal \
   # drm-kmod \
   # nvidia-driver \
@@ -234,7 +236,7 @@ pkg install -y \
 # ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
 
 # Add admin and video acceleration groups to user
-pw usermod "$CURRENT_USER" -G wheel,operator,video
+pw usermod "$CURRENT_USER" -G wheel,operator,video,u2f
 
 # Initialize rpm database for installing linux packages
 # mkdir -p /var/lib/rpm
@@ -575,6 +577,21 @@ add path 'cx23885*' mode 0660 group operator # CX23885-family stream configurati
 add path 'iicdev*' mode 0660 group operator
 add path 'uvisor[0-9]*' mode 0660 group operator
 " /etc/devfs.rules
+
+# /usr/local/etc/devd/pc_card.conf
+write_to_file '
+# Allow USB cardreaders hot-swapping, provided by pcsc-lite
+
+attach 100 {
+  device-name "ugen[0-9]+";
+  action "/usr/local/sbin/pcscd -H";
+};
+
+detach 100 {
+  device-name "ugen[0-9]+";
+  action "/usr/local/sbin/pcscd -H";
+};
+' /usr/local/etc/devd/pc_card.conf
 
 # set locale to UTF-8-US
 write_to_file '
