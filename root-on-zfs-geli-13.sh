@@ -16,6 +16,9 @@
 
 # Find device name, eg: nvd0
 camcontrol devlist
+# or
+nvmelist devlist
+# consider using nda instead of nvd driver for nvme drives
 
 # Erase disk
 # gpart destroy -F nvd0
@@ -23,7 +26,13 @@ camcontrol devlist
 
 # Create UEFI boot partition
 # gpart add -a 4k -s 200M -t efi -l boot0 nvd0 # macOS/Windows has already created this
-#gpart bootcode -p /boot/boot1.efifat -i 1 nvd0 # creates an 800k FAT filesystem, not enough for rEFInd, copy loader manually
+# gpart bootcode -p /boot/boot1.efifat -i 1 nvd0 # creates an 800k FAT filesystem, not enough for rEFInd, copy loader manually
+# eg:
+# newfs_msdos -F 32 -c 1 /dev/nvd0p1
+# mount -t msdosfs -o longnames /dev/nvd0p1 /mnt
+# mkdir -p /mnt/EFI/BOOT
+# cp /boot/loader.efi /mnt/EFI/BOOT/BOOTX64.efi
+# umount /mnt
 
 # Create swap and zfs partitions, align to 1m (align_big) [With GPT, we align
 # large partitions to 1m for improved performance on SSDs]
