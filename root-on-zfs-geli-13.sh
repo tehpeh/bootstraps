@@ -17,7 +17,7 @@
 # Find device name, eg: nvd0
 camcontrol devlist
 # or
-nvmelist devlist
+nvmecontrol devlist
 # consider using nda instead of nvd driver for nvme drives
 
 # Erase disk
