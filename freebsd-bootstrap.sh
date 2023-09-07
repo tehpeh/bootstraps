@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-# Download: curl -LO https://bit.ly/bootstrap-freebsd
+# Download: fetch https://bit.ly/bootstrap-freebsd
 
 # References
 #
