@@ -138,8 +138,8 @@ pkg install -y \
   bastille \
   bhyve-firmware \
   ca_root_nss \
+  cpu-microcode \
   curl \
-  devcpu-data \
   direnv \
   doas \
   en-hunspell \
