@@ -645,8 +645,7 @@ block in log all
 pass out quick modulate state
 
 # Enable antispoofing on the external interface
-antispoof for $ext_if inet
-antispoof for $ext_if inet6
+antispoof for $ext_if
 
 # block packets that fail a reverse path check. we look up the routing
 # table, check to make sure that the outbound is the same as the source
@@ -834,6 +833,7 @@ export LC_CTYPE="en_US.UTF-8"
 export TZ=":Australia/Sydney"
 ' ."/home/$CURRENT_USER/.xprofile"
 
+# TODO: swap to 'setxkbmap -option ctrl:nocaps' as an autostart script
   write_to_file "
 remove Lock = Caps_Lock
 keysym Caps_Lock = Control_L
