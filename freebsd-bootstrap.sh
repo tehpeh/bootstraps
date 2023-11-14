@@ -274,10 +274,9 @@ accf_http_load="YES"
 # Tune ZFS Arc Size - Change to adjust memory used for disk cache, default is half available RAM
 vfs.zfs.arc_max="256M"
 
-# Install CPU microcode updates
+# Install CPU microcode updates, only supports Intel, use rc.conf method for AMD
 cpu_microcode_load="YES"
-#cpu_microcode_name="/boot/firmware/intel-ucode.bin"
-#cpu_microcode_name="/boot/firmware/amd-ucode.bin"
+cpu_microcode_name="/boot/firmware/intel-ucode.bin"
 
 # Filesystems in Userspace
 fusefs_load="YES"
