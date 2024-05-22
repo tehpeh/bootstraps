@@ -440,7 +440,6 @@ ntpd_flags="-g"
 # sndiod_enable="YES"
 # sndiod_flags="-j on" # use this with virtual_oss and/or Chromium
 # sndiod_flags="-j on -r 96000 -e s24" # use with virtual_oss@96k24bit
-# add media.cubeb.backend=sndio to firefox about:config - not necessary
 
 # Enable webcam
 webcamd_enable="YES"
@@ -846,6 +845,19 @@ fi
 
 # Final message
 cat <<EOT
+
+------------------
+Post-install notes
+------------------
+
+Firefox configuration (about:config)-
+
+To set a different audio backend use:
+media.cubeb.backend=sndio or oss
+
+To fix mic levels:
+media.getusermedia.channels=1
+(or media.getusermedia.microphone.prefer_voice_stream_with_processing.enabled=false - doesnt work since v126?)
 
 ---------
 Finished!
