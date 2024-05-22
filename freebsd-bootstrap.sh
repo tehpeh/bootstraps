@@ -355,6 +355,9 @@ sendmail_enable="NONE"
 # Set hostname
 # hostname=""
 
+# Mount ZFS datasets at boot
+zfs_enable="YES"
+
 # Networking:
 
 # Ethernet em0
