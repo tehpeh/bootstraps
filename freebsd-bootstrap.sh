@@ -346,6 +346,9 @@ write_to_file '
 # Clear /tmp on reboot
 clear_tmp_enable="YES"
 
+# Mount ZFS datasets at boot
+zfs_enable="YES"
+
 # Disable syslog open network sockets
 syslogd_flags="-ss"
 
@@ -354,9 +357,6 @@ sendmail_enable="NONE"
 
 # Set hostname
 # hostname=""
-
-# Mount ZFS datasets at boot
-zfs_enable="YES"
 
 # Networking:
 
@@ -417,11 +417,6 @@ powerd_enable="YES" # base, more aggressive scaling
 hcsecd_enable="YES"
 sdpd_enable="YES"
 
-# Synchronize system time
-ntpd_enable="YES"
-# Let ntpd make time jumps larger than 1000sec
-ntpd_flags="-g"
-
 # Enable virtual_oss to combine audio devices
 # Output is USB Scarlett, input is USB webcam
 # virtual_oss_enable="YES"
@@ -456,11 +451,19 @@ dsbmd_enable="YES"
 # iPad charge
 ipad_charge_enable="YES"
 
+# PCSCD (for Yubikey)
+pcscd_enable="YES"
+
 # Services:
 
 # Enable services for Gnome type desktops
 # avahi_daemon_enable="YES"
 dbus_enable="YES"
+
+# Synchronize system time
+ntpd_enable="YES"
+# Let ntpd make time jumps larger than 1000sec
+ntpd_flags="-g"
 
 # Start sshd
 sshd_enable="YES"
@@ -507,6 +510,10 @@ vfs.usermount=1
 
 # Do not hang on shutdown when using USB disks
 hw.usb.no_shutdown_wait=1
+
+# Use (older) uhid for Yubikey, otherwise webauthn does not work
+# remove this if moving to hidraw (when fido/webauthn is supported)
+hw.usb.usbhid.enable=0
 
 # Disable the system bell
 kern.vt.enable_bell=0
