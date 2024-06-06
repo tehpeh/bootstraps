@@ -228,13 +228,6 @@ pkg install -y \
 
 # TODO: There is a port available for resilio sync, no package, at net-p2p/rslsync
 
-# Set up fonts
-# NOTE: If you install `x11-fonts/urwfonts-ttf` then disable all Nimbus fonts in font-manager
-# because Nimbus, as replacement for Helvetica, renders really compressed kerning in Firefox
-# ln -s /usr/local/etc/fonts/conf.avail/10-hinting-none.conf /usr/local/etc/fonts/conf.d/
-# ln -s /usr/local/etc/fonts/conf.avail/10-no-sub-pixel.conf /usr/local/etc/fonts/conf.d/
-# ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
-
 # Add admin and video acceleration groups to user
 pw usermod "$CURRENT_USER" -G wheel,operator,video,u2f
 
@@ -857,7 +850,8 @@ cat <<EOT
 Post-install notes
 ------------------
 
-Firefox configuration (about:config)-
+Firefox configuration (about:config)
+------------------------------------
 
 To set a different audio backend use:
 media.cubeb.backend=sndio or oss
@@ -865,6 +859,17 @@ media.cubeb.backend=sndio or oss
 To fix mic levels:
 media.getusermedia.channels=1
 (or media.getusermedia.microphone.prefer_voice_stream_with_processing.enabled=false - doesnt work since v126?)
+
+Set up fonts
+------------
+
+NOTE: If you install x11-fonts/urwfonts-ttf then disable all Nimbus fonts in font-manager
+because Nimbus, as replacement for Helvetica, renders really compressed kerning in Firefox
+
+Optional, set your font preferences:
+$ ln -s /usr/local/etc/fonts/conf.avail/10-hinting-none.conf /usr/local/etc/fonts/conf.d/
+$ ln -s /usr/local/etc/fonts/conf.avail/10-no-sub-pixel.conf /usr/local/etc/fonts/conf.d/
+$ ln -s /usr/local/etc/fonts/conf.avail/70-no-bitmaps.conf /usr/local/etc/fonts/conf.d/
 
 ---------
 Finished!
