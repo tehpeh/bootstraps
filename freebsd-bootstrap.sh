@@ -857,7 +857,7 @@ To set a different audio backend use:
 media.cubeb.backend=sndio or oss
 
 To fix mic levels:
-media.getusermedia.channels=1
+media.getusermedia.audio.max_channels=1
 (or media.getusermedia.microphone.prefer_voice_stream_with_processing.enabled=false - doesnt work since v126?)
 
 Set up fonts
