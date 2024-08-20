@@ -393,9 +393,9 @@ moused_enable="YES"
 # powerd_enable="YES" # base, more aggressive scaling
 # powerd_flags="-a hiadaptive -b adaptive" # defaults
 
-# C-states:
+# C-states, observe with sysctl dev.cpu | grep cx
 # Default is C1, stops clock on some parts of CPU core during inactivity
-# Enable C2, turn off all core clocks on idle
+# Enable C2 and below, turn off all core clocks on idle
 # performance_cx_lowest="Cmax"
 # economy_cx_lowest="Cmax"
 
