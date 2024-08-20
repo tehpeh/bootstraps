@@ -294,6 +294,10 @@ cuse_load="YES"
 # Intel Core thermal sensors
 # coretemp_load="YES"
 
+# Intel Speed Shift optimize clock per core
+# machdep.hwpstate_pkg_ctrl=0  # Selects between package-level control (1, the default) and per-core control (0)
+# dev.hwpstate_intel.0.epp=50  # 0 max, 50 balanced, 100 power saving, set per core
+
 # AMD K8, K10, K11 thermal sensors
 # amdtemp_load="YES"
 
@@ -396,8 +400,8 @@ moused_enable="YES"
 # C-states, observe with sysctl dev.cpu | grep cx
 # Default is C1, stops clock on some parts of CPU core during inactivity
 # Enable C2 and below, turn off all core clocks on idle
-# performance_cx_lowest="Cmax"
-# economy_cx_lowest="Cmax"
+# performance_cx_lowest="Cmax" # default: NONE
+# economy_cx_lowest="Cmax" # default: Cmax
 
 # Load nvidia-driver
 # kld_list="nvidia"
