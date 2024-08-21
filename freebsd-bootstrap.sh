@@ -393,7 +393,7 @@ keymap="us.ctrl.kbd"
 moused_enable="YES"
 
 # Power management, both superseded by hwpstate_intel(4) (check dmesg)
-# powerdxx_enable="YES" # port, more conservative scaling,
+# powerdxx_enable="YES" # port, more conservative scaling
 # powerd_enable="YES" # base, more aggressive scaling
 # powerd_flags="-a hiadaptive -b adaptive" # defaults
 
