@@ -296,7 +296,9 @@ cuse_load="YES"
 
 # Intel Speed Shift optimize clock per core
 # machdep.hwpstate_pkg_ctrl=0  # Selects between package-level control (1, the default) and per-core control (0)
-# dev.hwpstate_intel.0.epp=50  # 0 max, 50 balanced, 100 power saving, set per core
+# Set energy/performance preference: 0 max, 50 balanced, 100 power saving,
+# set per core or use any core if using package-level control
+# dev.hwpstate_intel.0.epp=50
 
 # AMD K8, K10, K11 thermal sensors
 # amdtemp_load="YES"
