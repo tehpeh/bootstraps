@@ -294,7 +294,7 @@ cuse_load="YES"
 # Intel Core thermal sensors
 # coretemp_load="YES"
 
-# Intel Speed Shift optimize clock per core
+# Intel Speed Shift
 # machdep.hwpstate_pkg_ctrl=0  # Selects between package-level control (1, the default) and per-core control (0)
 # Set energy/performance preference: 0 max, 50 balanced, 100 power saving,
 # set per core or use any core if using package-level control
