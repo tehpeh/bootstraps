@@ -474,7 +474,7 @@ ntpd_flags="-g"
 
 # Start sshd
 sshd_enable="YES"
-sshd_flags="-o ListenAddress=HOSTNAME" # dont listen on cloned loopback interface
+sshd_flags="-o KbdInteractiveAuthentication=no -o PasswordAuthentication=no -o ListenAddress=HOSTNAME" # dont listen on cloned loopback interface
 
 # Start smartd
 smartd_enable="YES"
@@ -632,7 +632,7 @@ udp_services = "{dhcpv6-client}"
 # discovery. These macros define allowed ICMP types. The additional
 # ICMPv6 types are for neighbor discovery (RFC 4861)
 icmp_types = "{echoreq, unreach}"
-icmp6_types="{echoreq, unreach, 133, 134, 135, 136, 137}"
+icmp6_types = "{echoreq, unreach, 133, 134, 135, 136, 137}"
 
 # Modulate the initial sequence number of TCP packets.
 # Broken operating systems sometimes dont randomize this number,
