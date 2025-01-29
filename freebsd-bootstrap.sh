@@ -291,6 +291,10 @@ cuse_load="YES"
 
 # Hardware specific:
 
+# Use (older) uhid for Yubikey, otherwise webauthn does not work
+# remove this if moving to hidraw (when fido/webauthn is supported)
+hw.usb.usbhid.enable=0
+
 # Intel Core thermal sensors
 # coretemp_load="YES"
 
@@ -517,10 +521,6 @@ vfs.usermount=1
 
 # Do not hang on shutdown when using USB disks
 hw.usb.no_shutdown_wait=1
-
-# Use (older) uhid for Yubikey, otherwise webauthn does not work
-# remove this if moving to hidraw (when fido/webauthn is supported)
-hw.usb.usbhid.enable=0
 
 # Disable the system bell
 kern.vt.enable_bell=0
