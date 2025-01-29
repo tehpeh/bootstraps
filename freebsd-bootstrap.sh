@@ -170,6 +170,7 @@ pkg install -y \
   tig \
   tmux \
   vm-bhyve \
+  py311-zfs-autobackup \
 
 # Install applications
 pkg install -y \
