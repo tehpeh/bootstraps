@@ -158,19 +158,22 @@ pkg install -y \
   libinotify \
   libu2f-host \
   linux-c7 \
+  opensc \
   openssl \
-  password-store \
   pass-otp \
+  password-store \
+  pcsc-tools \
   pefs-kmod \
   powerdxx \
+  py311-zfs-autobackup \
   readline \
   rpm4 \
   smartmontools \
   sudo \
   tig \
   tmux \
+  u2f-devd \
   vm-bhyve \
-  py311-zfs-autobackup \
 
 # Install applications
 pkg install -y \
