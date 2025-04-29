@@ -830,6 +830,7 @@ if [ "$XFCE" = true ]; then
 
   # Extra applications
   pkg install -y \
+    engrampa \
     font-manager \
     gnome-keyring \
     gtk-arc-themes \
@@ -838,7 +839,6 @@ if [ "$XFCE" = true ]; then
     redshift \
     seahorse \
     wifimgr \
-    xarchiver \
     xpdf \
 
   write_to_file '
