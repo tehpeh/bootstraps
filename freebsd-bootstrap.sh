@@ -155,6 +155,7 @@ pkg install -y \
   keybase \
   keychain \
   libdvdcss \
+  libfido2 \
   libinotify \
   libu2f-host \
   linux-c7 \
@@ -250,9 +251,11 @@ sudo -u postgres createdb "$CURRENT_USER"
 # /boot/loader.conf
 # use kldstat -v | grep <name> to check what is already loaded
 write_to_file '
-# Load crypto and geli
+# Load crypto, geli, and ZFS
 aesni_load="YES"
+cryptodev_load="YES"
 geom_eli_load="YES"
+zfs_load="YES"
 
 # Reduce boot menu delay
 autoboot_delay="3"
@@ -850,14 +853,11 @@ lightdm_enable="YES"
 export LANG="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
 export TZ=":Australia/Sydney"
+
+setxkbmap -option ctrl:nocaps
 ' ."/home/$CURRENT_USER/.xprofile"
 
-# TODO: swap to 'setxkbmap -option ctrl:nocaps' as an autostart script
-  write_to_file "
-remove Lock = Caps_Lock
-keysym Caps_Lock = Control_L
-add Control = Control_L
-" "/home/$CURRENT_USER/.Xmodmap"
+# or setxkbmap as an XFCE autostart script?
 
 fi
 
