@@ -169,6 +169,7 @@ pkg install -y \
   py311-zfs-autobackup \
   readline \
   rpm4 \
+  rsync \
   smartmontools \
   sudo \
   tig \
@@ -401,9 +402,6 @@ pf_enable="YES"
 
 # Caps lock as control in console
 keymap="us.ctrl.kbd"
-
-# Enable mouse in console
-moused_enable="YES"
 
 # Power management, both superseded by hwpstate_intel(4) (check dmesg)
 # powerdxx_enable="YES" # port, more conservative scaling
@@ -691,8 +689,6 @@ pass inet6 proto icmp6 all icmp6-type $icmp6_types keep state
 
 # /etc/make.conf
 write_to_file '
-DEFAULT_VERSIONS+=ssl=openssl111
-WITH_CCACHE_BUILD=yes
 # Audio systems
 OPTIONS_SET+=SNDIO # enable sndio compile option
 OPTIONS_SET+=PORTAUDIO # Portaudio supports sndio, so more software supports sndio (gqrx is an example)
@@ -857,8 +853,7 @@ export TZ=":Australia/Sydney"
 setxkbmap -option ctrl:nocaps
 ' ."/home/$CURRENT_USER/.xprofile"
 
-# or setxkbmap as an XFCE autostart script?
-
+# or setxkbmap in an XFCE autostart script
 fi
 
 # Final message
