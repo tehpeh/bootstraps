@@ -266,12 +266,6 @@ kern.ipc.shmseg=1024
 kern.ipc.shmmni=1024
 kern.maxproc=100000
 
-# Increase the network interface queue link - default 50
-# net.link.ifqmaxlen="2048" # removed for now, causes issues
-
-# Load accf_http, buffer incoming connections until a certain complete HTTP requests arrive
-accf_http_load="YES"
-
 # Tune ZFS Arc Size - Change to adjust memory used for disk cache, default is half available RAM
 vfs.zfs.arc_max="256M"
 
@@ -374,6 +368,12 @@ sendmail_enable="NONE"
 # Ethernet em0
 ifconfig_em0="DHCP"
 ifconfig_em0_ipv6="inet6 accept_rtadv"
+
+# Wireless Intel iwlwifi0
+wlans_iwlwifi0="wlan0"
+ifconfig_wlan0="WPA DHCP"
+ifconfig_wlan0_ipv6="inet6 accept_rtadv"
+create_args_wlan0="country US regdomain FCC"
 
 # Tethered Raspberry Pi
 # ifconfig_ue0="DHCP"
