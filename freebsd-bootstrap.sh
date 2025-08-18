@@ -514,9 +514,9 @@ kern.ipc.shmall=32768
 kern.sched.preempt_thresh=224
 
 # Bump up maximum number of open files
+kern.maxfiles=1048576
 kern.maxfilesperproc=1048576
 kern.maxvnodes=1048576
-kern.maxfiles=1048576
 
 # Enable shared memory for Chromium
 kern.ipc.shm_allow_removed=1
@@ -650,9 +650,9 @@ udp_state="keep state"
 # Reject blocked packets
 set block-policy return
 
-# Exempt the loopback interface to prevent services utilizing the
+# Exempt the loopback interface(s) to prevent services utilizing the
 # local loop from being blocked accidentally.
-set skip on lo0
+set skip on lo
 
 # All incoming traffic on external interface is normalized and fragmented
 # packets are reassembled.
