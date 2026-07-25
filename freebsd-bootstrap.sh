@@ -15,6 +15,7 @@ set -e
 #
 # - add custom files/mods from /usr/local/etc/devd/
 # - update pf.conf
+# - might not need the proc and fdesc lines in /etc/fstab
 
 # Util functions
 
@@ -301,7 +302,8 @@ hw.usb.usbhid.enable=0
 # coretemp_load="YES"
 
 # Intel Speed Shift
-# machdep.hwpstate_pkg_ctrl=0  # Selects between package-level control (1, the default) and per-core control (0)
+# Select between package-level control (1, the default) and per-core control (0)
+# machdep.hwpstate_pkg_ctrl=0
 # Set energy/performance preference: 0 max, 50 balanced, 100 power saving,
 # set per core or use any core if using package-level control
 # dev.hwpstate_intel.0.epp=50
@@ -469,6 +471,7 @@ ipad_charge_enable="YES"
 
 # PCSCD (for Yubikey)
 pcscd_enable="YES"
+pcscd_flags="--disable-polkit"
 
 # Services:
 
